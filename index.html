@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>BK Pochette Congo — Tri & Livraisons</title>
+<link rel="manifest" href="./manifest.json">
+<meta name="theme-color" content="#14161B">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="BK Livraisons">
+<link rel="apple-touch-icon" href="./icon-192.png">
+<link rel="icon" type="image/png" href="./icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#EDEEF1;
+    --paper:#FFFFFF;
+    --ink:#14161B;
+    --ink-soft:#4A4F5C;
+    --ink-faint:#8A909E;
+    --line:#E2E4EA;
+    --line-soft:#EEF0F3;
+
+    --a:#D97A06;   --a-tint:#FCF0DC;  --a-deep:#9C5704;
+    --b:#0E8C7F;   --b-tint:#DCF1EE;  --b-deep:#0A5F56;
+    --c:#C42A6B;   --c-tint:#FBE2EC;  --c-deep:#8E1A4B;
+
+    --ok:#1F9D55;
+    --danger:#D43B3B;
+    --radius:14px;
+    --shadow:0 1px 2px rgba(20,22,27,.05),0 8px 24px rgba(20,22,27,.06);
+    --font-d:'Space Grotesk',system-ui,sans-serif;
+    --font-b:'Inter',system-ui,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--bg);color:var(--ink);font-family:var(--font-b);-webkit-font-smoothing:antialiased;line-height:1.45}
+  body{padding:0 0 96px}
+  button{font-family:inherit;cursor:pointer;border:none;background:none}
+  input,select{font-family:inherit}
+
+  /* ---------- Header ---------- */
+  header{
+    background:var(--ink);color:#fff;
+    padding:18px 20px calc(18px + env(safe-area-inset-bottom,0px));
+    padding-top:calc(18px + env(safe-area-inset-top,0px));
+    position:sticky;top:0;z-index:30;
+  }
+  .brand{display:flex;align-items:center;gap:12px}
+  .logo{
+    width:42px;height:42px;border-radius:11px;flex:0 0 auto;
+    background:linear-gradient(135deg,var(--a) 0%,var(--c) 55%,var(--b) 100%);
+    display:flex;align-items:center;justify-content:center;
+    font-family:var(--font-d);font-weight:700;font-size:18px;color:#fff;letter-spacing:.5px;
+  }
+  .brand h1{font-family:var(--font-d);font-size:18px;font-weight:600;letter-spacing:-.2px;line-height:1.1}
+  .brand p{font-size:11.5px;color:#A9AEBD;letter-spacing:.3px;text-transform:uppercase;margin-top:2px}
+  .ribbon{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+  .pill{
+    display:flex;align-items:center;gap:7px;background:rgba(255,255,255,.07);
+    border:1px solid rgba(255,255,255,.09);border-radius:999px;padding:6px 11px 6px 9px;font-size:12px;color:#D6D9E1
+  }
+  .pill .dot{width:9px;height:9px;border-radius:50%}
+  .pill b{font-family:var(--font-d);color:#fff;font-weight:600}
+
+  main{max-width:920px;margin:0 auto;padding:18px 16px 0}
+
+  /* ---------- Card / form ---------- */
+  .card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+  .form-card{padding:18px 16px}
+  .form-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:14px}
+  .form-head h2{font-family:var(--font-d);font-size:15px;font-weight:600;letter-spacing:-.1px}
+  .form-head span{font-size:12px;color:var(--ink-faint)}
+
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+
+  .mode-switch{display:flex;gap:6px;background:#F0F1F4;border:1px solid var(--line);border-radius:11px;padding:4px;margin-bottom:14px}
+
+  .paste-wrap{margin-bottom:14px}
+  .paste-toggle{display:flex;align-items:center;gap:8px;width:100%;justify-content:center;border:1.5px dashed var(--b);background:var(--b-tint);color:var(--b-deep);font-weight:600;font-size:13.5px;padding:11px;border-radius:11px;transition:transform .08s}
+  .paste-toggle:active{transform:scale(.99)}
+  .paste-box{margin-top:10px}
+  #f-paste{width:100%;background:#F8F9FB;border:1px solid var(--line);border-radius:10px;padding:11px 12px;font-size:14px;font-family:inherit;resize:vertical;line-height:1.45;color:var(--ink)}
+  #f-paste:focus{outline:none;border-color:var(--b);background:#fff}
+  .paste-actions{display:flex;gap:8px;margin-top:8px}
+  .paste-go{flex:1;background:var(--b);color:#fff;font-weight:600;font-size:14px;padding:11px;border-radius:10px;transition:transform .08s}
+  .paste-go:active{transform:scale(.98)}
+  .paste-clear{background:#fff;border:1px solid var(--line);color:var(--ink-soft);font-weight:600;font-size:13px;padding:11px 16px;border-radius:10px}
+  .paste-summary{display:flex;flex-wrap:wrap;gap:6px;margin-top:11px}
+  .paste-summary:empty{display:none}
+  .chip{font-size:11.5px;font-weight:600;padding:4px 9px;border-radius:7px;display:flex;align-items:center;gap:5px}
+  .chip.ok{background:#E3F4EA;color:#1F7A45}
+  .chip.miss{background:#FBE7E7;color:#B23636}
+  .chip.def{background:var(--line-soft);color:var(--ink-soft)}
+  .mode-opt{flex:1;padding:9px;border-radius:8px;font-size:13px;font-weight:600;color:var(--ink-soft);transition:.15s}
+  .mode-opt.sel{background:#fff;color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+  .yday-field{margin-bottom:14px}
+  .yday-hint{font-size:11.5px;color:var(--ink-faint);line-height:1.4;margin-top:2px}
+  .yday-field input{border-color:var(--c);background:var(--c-tint);font-family:var(--font-d);font-weight:600;letter-spacing:1px}
+  .field{display:flex;flex-direction:column;gap:5px}
+  .field.full{grid-column:1 / -1}
+  label{font-size:11.5px;font-weight:600;color:var(--ink-soft);letter-spacing:.2px}
+  label .opt{color:var(--ink-faint);font-weight:500}
+  input[type=text],input[type=tel],input[type=number],select{
+    width:100%;background:#F8F9FB;border:1px solid var(--line);border-radius:10px;
+    padding:11px 12px;font-size:14.5px;color:var(--ink);transition:border-color .15s,background .15s
+  }
+  input:focus,select:focus{outline:none;border-color:var(--ink);background:#fff}
+  select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238A909E' stroke-width='1.6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 13px center;padding-right:34px}
+
+  /* zone badge live */
+  .zone-live{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--ink-faint);min-height:20px;margin-top:2px}
+  .zbadge{font-family:var(--font-d);font-weight:600;font-size:11.5px;padding:3px 9px;border-radius:7px;letter-spacing:.3px}
+
+  /* type selector */
+  .types{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+  .type-opt{border:1.5px solid var(--line);border-radius:10px;padding:9px 8px;text-align:center;transition:.15s;background:#F8F9FB}
+  .type-opt small{display:block;font-size:10.5px;color:var(--ink-faint);font-weight:600;letter-spacing:.3px;text-transform:uppercase}
+  .type-opt b{display:block;font-family:var(--font-d);font-size:15px;margin-top:2px}
+  .type-opt.sel{border-color:var(--ink);background:#fff;box-shadow:0 0 0 3px rgba(20,22,27,.06)}
+
+  .total-row{display:flex;align-items:center;justify-content:space-between;margin-top:14px;padding:11px 13px;background:var(--ink);border-radius:10px;color:#fff}
+  .total-row span{font-size:12px;color:#A9AEBD;letter-spacing:.3px}
+  .total-row b{font-family:var(--font-d);font-size:20px}
+
+  .btn-add{width:100%;margin-top:12px;background:var(--ink);color:#fff;font-family:var(--font-d);font-weight:600;font-size:15px;padding:14px;border-radius:11px;letter-spacing:.2px;transition:transform .08s,opacity .15s;display:flex;align-items:center;justify-content:center;gap:9px}
+  .btn-add:active{transform:scale(.985)}
+  .btn-add:disabled{opacity:.45;cursor:not-allowed}
+
+  /* ---------- Zones ---------- */
+  .zones{margin-top:22px;display:flex;flex-direction:column;gap:18px}
+  .zone{border-radius:var(--radius);overflow:hidden;border:1px solid var(--line);background:var(--paper);box-shadow:var(--shadow)}
+  .zone-top{padding:14px 16px;color:#fff;position:relative}
+  .za .zone-top{background:linear-gradient(120deg,var(--a-deep),var(--a))}
+  .zb .zone-top{background:linear-gradient(120deg,var(--b-deep),var(--b))}
+  .zc .zone-top{background:linear-gradient(120deg,var(--c-deep),var(--c))}
+  .zone-top .row1{display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .zone-letter{font-family:var(--font-d);font-size:26px;font-weight:700;line-height:1;display:flex;align-items:baseline;gap:9px}
+  .zone-letter small{font-size:12px;font-weight:500;opacity:.85;letter-spacing:.4px;text-transform:uppercase}
+  .zone-stats{text-align:right;font-size:12px;opacity:.95}
+  .zone-stats b{font-family:var(--font-d);font-size:17px;display:block;font-weight:600}
+
+  .zone-line{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:11px;padding-top:11px;border-top:1px solid rgba(255,255,255,.18)}
+  .zl-lbl{font-size:11.5px;opacity:.9;letter-spacing:.2px}
+  .zl-phone{font-family:var(--font-d);font-weight:600;font-size:14px;letter-spacing:.4px}
+
+  .zone-body{padding:8px 10px 12px}
+  .empty{padding:26px 16px;text-align:center;color:var(--ink-faint);font-size:13px}
+  .empty b{display:block;font-family:var(--font-d);color:var(--ink-soft);font-size:14px;margin-bottom:3px}
+
+  .order{display:flex;gap:11px;padding:11px 8px;border-bottom:1px solid var(--line-soft);align-items:flex-start}
+  .order:last-child{border-bottom:none}
+  .order.done{opacity:.5}
+  .order.done .o-name{text-decoration:line-through}
+  .code{font-family:var(--font-d);font-weight:700;font-size:13.5px;flex:0 0 auto;padding:6px 9px;border-radius:8px;letter-spacing:.4px;min-width:42px;text-align:center}
+  .za .code{background:var(--a-tint);color:var(--a-deep)}
+  .zb .code{background:var(--b-tint);color:var(--b-deep)}
+  .zc .code{background:var(--c-tint);color:var(--c-deep)}
+  .o-main{flex:1;min-width:0}
+  .o-name{font-weight:600;font-size:14.5px;letter-spacing:-.1px}
+  .o-meta{font-size:12.5px;color:var(--ink-soft);margin-top:2px;line-height:1.4}
+  .o-meta .sep{color:var(--ink-faint)}
+  .wa-link{color:#0E8C7F;font-weight:600;text-decoration:none}
+  .wa-link:active{opacity:.6}
+  .o-tags{display:flex;gap:6px;margin-top:6px;flex-wrap:wrap;align-items:center}
+  .tag{font-size:11px;font-weight:600;padding:2px 8px;border-radius:6px;background:var(--line-soft);color:var(--ink-soft)}
+  .tag.price{font-family:var(--font-d);background:var(--ink);color:#fff}
+  .tag.special{background:#FBE2EC;color:var(--c-deep)}
+  .tag.carried{background:#FFF1D6;color:var(--a-deep)}
+  .o-actions{display:flex;flex-direction:column;gap:6px;flex:0 0 auto}
+  .icon-btn{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;border:1px solid var(--line);background:#fff;color:var(--ink-soft);transition:.12s}
+  .icon-btn:active{transform:scale(.9)}
+  .icon-btn.del:hover{border-color:var(--danger);color:var(--danger)}
+  .icon-btn.check.on{background:var(--ok);border-color:var(--ok);color:#fff}
+
+  .zone-foot{display:flex;flex-wrap:wrap;gap:9px;padding:11px 12px;border-top:1px solid var(--line);background:#FAFBFC}
+  .wa-btn{flex:1 1 100%;background:#25D366;color:#0A3D22;font-weight:700;font-size:13.5px;padding:11px;border-radius:10px;display:flex;align-items:center;justify-content:center;gap:8px;transition:transform .08s}
+  .wa-btn:active{transform:scale(.98)}
+  .wa-btn:disabled{background:#E2E4EA;color:var(--ink-faint);cursor:not-allowed}
+  .foot-btn{flex:1 1 0;background:#fff;border:1px solid var(--line);color:var(--ink-soft);font-weight:600;font-size:13px;padding:11px 12px;border-radius:10px;display:flex;align-items:center;justify-content:center;gap:7px}
+  .foot-btn:active{transform:scale(.97)}
+  .foot-btn:disabled{opacity:.45;cursor:not-allowed}
+
+  /* ---------- Footer / day reset ---------- */
+  .daybar{max-width:920px;margin:20px auto 0;padding:0 16px;display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+  .store-note{font-size:11.5px;color:var(--ink-faint);display:flex;align-items:center;gap:6px}
+  .store-note .d{width:7px;height:7px;border-radius:50%;background:var(--ok)}
+  .store-note.warn .d{background:var(--a)}
+  .daybar-actions{display:flex;gap:8px;flex-wrap:wrap}
+  .reset-btn{background:#fff;border:1px solid var(--line);color:var(--ink-soft);font-size:12.5px;font-weight:600;padding:9px 14px;border-radius:9px}
+  .reset-btn.print-all:hover{border-color:var(--ink);color:var(--ink)}
+  .reset-btn.save{border-color:var(--b);color:var(--b-deep);background:var(--b-tint)}
+  .reset-btn.save:hover{border-color:var(--b-deep)}
+  .reset-btn.danger:hover{border-color:var(--danger);color:var(--danger)}
+  .reset-btn:hover{border-color:var(--ink-faint)}
+
+  /* ---------- Toast ---------- */
+  .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:12px 18px;border-radius:11px;font-size:13.5px;font-weight:500;z-index:60;opacity:0;pointer-events:none;transition:.25s;box-shadow:0 10px 30px rgba(0,0,0,.25);max-width:88%;text-align:center}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+  @media (max-width:520px){
+    .grid{grid-template-columns:1fr}
+    .field.half{grid-column:auto}
+  }
+  @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <div class="logo">BK</div>
+    <div>
+      <h1>Pochette Congo</h1>
+      <p>Tri &amp; livraisons par zone</p>
+    </div>
+  </div>
+  <div class="ribbon">
+    <div class="pill"><span class="dot" style="background:var(--a)"></span> Zone A <b id="rA">0</b></div>
+    <div class="pill"><span class="dot" style="background:var(--b)"></span> Zone B <b id="rB">0</b></div>
+    <div class="pill"><span class="dot" style="background:var(--c)"></span> Zone C <b id="rC">0</b></div>
+  </div>
+</header>
+
+<main>
+  <!-- ====== Formulaire ====== -->
+  <section class="card form-card">
+    <div class="form-head">
+      <h2 id="formTitle">Nouvelle commande</h2>
+      <span id="nextCode">—</span>
+    </div>
+
+    <div class="paste-wrap">
+      <button type="button" class="paste-toggle" id="pasteToggle">
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M5.5 3H4a1 1 0 00-1 1v9a1 1 0 001 1h8a1 1 0 001-1V4a1 1 0 00-1-1h-1.5M6 2.5h4v2H6z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
+        Coller depuis WhatsApp
+      </button>
+      <div class="paste-box" id="pasteBox" style="display:none">
+        <textarea id="f-paste" rows="4" placeholder="Colle ici le message du client (nom, commune, téléphone, quantité, type…)"></textarea>
+        <div class="paste-actions">
+          <button type="button" class="paste-go" id="pasteGo">Analyser &amp; remplir</button>
+          <button type="button" class="paste-clear" id="pasteClear">Vider</button>
+        </div>
+        <div class="paste-summary" id="pasteSummary"></div>
+      </div>
+    </div>
+
+    <div class="mode-switch" id="modeSwitch">
+      <button type="button" class="mode-opt sel" data-mode="new">Nouvelle commande</button>
+      <button type="button" class="mode-opt" data-mode="yesterday">Commande d'hier</button>
+    </div>
+
+    <div class="field full yday-field" id="ydayField" style="display:none">
+      <label for="f-code">N° d'étiquette à conserver <span class="opt">(ex. A2)</span></label>
+      <input type="text" id="f-code" placeholder="Ex. A2" autocomplete="off" maxlength="6" style="text-transform:uppercase">
+      <div class="yday-hint" id="ydayHint">Tape le numéro déjà écrit sur la pochette d'hier. Il ne sera pas réutilisé par les nouvelles commandes.</div>
+    </div>
+
+    <div class="grid">
+      <div class="field full">
+        <label for="f-name">Nom du client</label>
+        <input type="text" id="f-name" placeholder="Ex. Jean Mukendi" autocomplete="off">
+      </div>
+
+      <div class="field">
+        <label for="f-commune">Commune</label>
+        <select id="f-commune">
+          <option value="" disabled selected>Choisir…</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="f-phone">Téléphone</label>
+        <input type="tel" id="f-phone" placeholder="Ex. 0815 000 000" autocomplete="off">
+      </div>
+
+      <div class="field full zone-live" id="zoneLive">
+        <span>La zone s'affiche selon la commune choisie.</span>
+      </div>
+
+      <div class="field full">
+        <label for="f-address">Adresse <span class="opt">(av/, n°, repère — facultatif)</span></label>
+        <input type="text" id="f-address" placeholder="Ex. av/ Tabora 14, près du marché" autocomplete="off">
+      </div>
+
+      <div class="field">
+        <label for="f-qty">Quantité de pochettes</label>
+        <input type="number" id="f-qty" min="1" step="1" value="1">
+      </div>
+      <div class="field">
+        <label for="f-special" id="specialLabel" style="visibility:hidden">Montant spécial ($)</label>
+        <input type="number" id="f-special" min="0" step="0.5" placeholder="Montant total" style="visibility:hidden">
+      </div>
+
+      <div class="field full">
+        <label>Type de commande</label>
+        <div class="types" id="types">
+          <button type="button" class="type-opt sel" data-type="standard"><small>Standard</small><b>15$</b></button>
+          <button type="button" class="type-opt" data-type="premium"><small>Premium</small><b>18$</b></button>
+          <button type="button" class="type-opt" data-type="special"><small>Spécial</small><b>Libre</b></button>
+        </div>
+      </div>
+    </div>
+
+    <div class="total-row">
+      <span>Total à encaisser</span>
+      <b id="totalCalc">0$</b>
+    </div>
+
+    <button class="btn-add" id="addBtn" disabled>
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 3.5v11M3.5 9h11" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      Enregistrer &amp; trier
+    </button>
+  </section>
+
+  <!-- ====== Zones ====== -->
+  <div class="zones" id="zones"></div>
+
+  <div class="daybar">
+    <div class="store-note" id="storeNote"><span class="d"></span><span id="storeTxt">Enregistré sur cet appareil</span></div>
+    <div class="daybar-actions">
+      <button class="reset-btn save" id="backupBtn">💾 Sauvegarder</button>
+      <button class="reset-btn" id="restoreBtn">↪ Restaurer</button>
+      <button class="reset-btn" id="csvBtn">Excel (CSV)</button>
+      <button class="reset-btn print-all" id="printAllBtn">Imprimer tout</button>
+      <button class="reset-btn" id="newDayBtn">Nouvelle journée</button>
+      <button class="reset-btn danger" id="clearAllBtn">Tout effacer</button>
+      <input type="file" id="restoreInput" accept="application/json,.json" style="display:none">
+    </div>
+  </div>
+</main>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ---------------- Données zones ---------------- */
+const ZONES = {
+  A:{label:"Zone A", name:"Ville",    phone:"+243 810427559", communes:["Gombe","Lingwala","Kinshasa","Kasa-Vubu","Ngiri-Ngiri","Barumbu","Kalamu"]},
+  B:{label:"Zone B", name:"Montagne", phone:"+243 860129801", communes:["Ngaliema","Mont-Ngafula","Selembao","Bumbu","Makala","Kintambo","Bandalungwa"]},
+  C:{label:"Zone C", name:"Tshangu",  phone:"+243 860334063", communes:["Lemba","Kisenso","N'sele","Matete","Ndjili","Maluku","Limete","Masina","Ngaba","Kimbanseke"]}
+};
+const COMMUNE_ZONE = {};
+Object.keys(ZONES).forEach(z=>ZONES[z].communes.forEach(c=>COMMUNE_ZONE[c]=z));
+const PRICE = {standard:15, premium:18};
+const ZONE_VAR = {A:"--a",B:"--b",C:"--c"};
+
+/* ---------------- État + stockage ---------------- */
+const STORE_KEY = "bkpc_state_v1";
+let state = { orders:[] };
+let memoryOnly = false;
+
+function loadState(){
+  try{
+    const raw = localStorage.getItem(STORE_KEY);
+    if(raw){ const p = JSON.parse(raw); state.orders = p.orders||[]; }
+  }catch(e){
+    memoryOnly = true;
+  }
+}
+function saveState(){
+  try{
+    localStorage.setItem(STORE_KEY, JSON.stringify({orders:state.orders}));
+    if(memoryOnly){ memoryOnly=false; updateStoreNote(); }
+  }catch(e){
+    memoryOnly = true; updateStoreNote();
+  }
+}
+function updateStoreNote(){
+  const n=document.getElementById('storeNote'), t=document.getElementById('storeTxt');
+  if(memoryOnly){ n.classList.add('warn'); t.textContent="Mode sans sauvegarde — données perdues à la fermeture"; }
+  else{ n.classList.remove('warn'); t.textContent="Enregistré sur cet appareil"; }
+}
+
+/* ---------------- Form state ---------------- */
+let curType = "standard";
+let curMode = "new";   // "new" | "yesterday"
+
+function parseCode(str){
+  const raw=(str||"").trim().toUpperCase().replace(/\s+/g,"");
+  const m=raw.match(/^([ABC])(\d+)$/);
+  if(!m) return null;
+  return { raw:m[1]+parseInt(m[2],10), zone:m[1], num:parseInt(m[2],10) };
+}
+function codeExists(raw){ return state.orders.some(o=>o.code===raw); }
+
+function setMode(m){
+  curMode=m;
+  document.querySelectorAll('.mode-opt').forEach(b=>b.classList.toggle('sel',b.dataset.mode===m));
+  document.getElementById('ydayField').style.display = m==="yesterday" ? "" : "none";
+  document.getElementById('formTitle').textContent = m==="yesterday" ? "Commande d'hier" : "Nouvelle commande";
+  document.getElementById('addBtn').lastChild.textContent = m==="yesterday" ? " Reprendre l'étiquette" : " Enregistrer & trier";
+  refreshForm();
+}
+
+function fillCommunes(){
+  const sel=document.getElementById('f-commune');
+  Object.keys(ZONES).forEach(z=>{
+    const og=document.createElement('optgroup'); og.label=ZONES[z].label;
+    ZONES[z].communes.slice().sort((a,b)=>a.localeCompare(b,'fr')).forEach(c=>{
+      const o=document.createElement('option'); o.value=c; o.textContent=c; og.appendChild(o);
+    });
+    sel.appendChild(og);
+  });
+}
+
+function getZoneFromForm(){
+  const c=document.getElementById('f-commune').value;
+  return c ? COMMUNE_ZONE[c] : null;
+}
+function nextCodeFor(zone){
+  let max=0;
+  state.orders.filter(o=>o.zone===zone).forEach(o=>{
+    const n=parseInt((o.code||"").slice(1),10); if(!isNaN(n)&&n>max)max=n;
+  });
+  return zone+(max+1);
+}
+function computeTotal(){
+  const qty=Math.max(1, parseInt(document.getElementById('f-qty').value||"1",10));
+  if(curType==="special"){ return parseFloat(document.getElementById('f-special').value||"0")||0; }
+  return PRICE[curType]*qty;
+}
+
+function refreshForm(){
+  const live=document.getElementById('zoneLive');
+  const nextEl=document.getElementById('nextCode');
+  const tintMap={A:"var(--a-tint)",B:"var(--b-tint)",C:"var(--c-tint)"};
+  const deepMap={A:"var(--a-deep)",B:"var(--b-deep)",C:"var(--c-deep)"};
+  const name=document.getElementById('f-name').value.trim();
+  const communeZone=getZoneFromForm();
+
+  // total + champs spécial (communs aux deux modes)
+  document.getElementById('totalCalc').textContent=fmt(computeTotal());
+  const spLab=document.getElementById('specialLabel'), spIn=document.getElementById('f-special');
+  const showSp = curType==="special";
+  spLab.style.visibility=showSp?"visible":"hidden"; spIn.style.visibility=showSp?"visible":"hidden";
+
+  let ok=false;
+
+  if(curMode==="yesterday"){
+    const parsed=parseCode(document.getElementById('f-code').value);
+    const hint=document.getElementById('ydayHint');
+    if(!parsed){
+      live.innerHTML=`<span>Tape l'étiquette d'hier (ex. A2, B7, C3).</span>`;
+      nextEl.textContent="—";
+      hint.textContent="Tape le numéro déjà écrit sur la pochette d'hier. Il ne sera pas réutilisé par les nouvelles commandes.";
+      hint.style.color="var(--ink-faint)";
+    }else if(codeExists(parsed.raw)){
+      live.innerHTML=`<span class="zbadge" style="background:var(--c-tint);color:var(--c-deep)">${parsed.raw}</span> <span style="color:var(--danger)">existe déjà dans la liste</span>`;
+      nextEl.textContent="—";
+      hint.textContent="Ce numéro est déjà utilisé. Choisis un autre numéro ou vérifie la liste.";
+      hint.style.color="var(--danger)";
+    }else{
+      const mismatch = communeZone && communeZone!==parsed.zone;
+      live.innerHTML=`<span>Reprise de</span> <span class="zbadge" style="background:${tintMap[parsed.zone]};color:${deepMap[parsed.zone]}">${parsed.raw}</span> <span>→ ${ZONES[parsed.zone].label} · ${ZONES[parsed.zone].name}</span>`
+        + (mismatch?` <span style="color:var(--a-deep)">⚠ commune en ${ZONES[communeZone].label}</span>`:``);
+      nextEl.textContent="Étiquette : "+parsed.raw;
+      hint.textContent= mismatch
+        ? "La commune choisie n'est pas dans cette zone — la commande suivra l'étiquette ("+parsed.zone+")."
+        : "Le numéro est conservé tel quel. Les nouvelles commandes ne le réutiliseront pas.";
+      hint.style.color= mismatch?"var(--a-deep)":"var(--ink-faint)";
+      ok = name && communeZone && (!showSp || computeTotal()>0);
+    }
+  }else{
+    if(communeZone){
+      const code=nextCodeFor(communeZone);
+      live.innerHTML=`<span>Sera trié dans</span> <span class="zbadge" style="background:${tintMap[communeZone]};color:${deepMap[communeZone]}">${ZONES[communeZone].label}</span> <span>· code <b style="font-family:var(--font-d);color:${deepMap[communeZone]}">${code}</b></span>`;
+      nextEl.textContent="Prochain code : "+code;
+    }else{
+      live.innerHTML=`<span>La zone s'affiche selon la commune choisie.</span>`;
+      nextEl.textContent="—";
+    }
+    ok = name && communeZone && (!showSp || computeTotal()>0);
+  }
+
+  document.getElementById('addBtn').disabled=!ok;
+}
+function fmt(n){ const v=Math.round(n*100)/100; return (Number.isInteger(v)?v:v.toFixed(2))+"$"; }
+function addrText(o){
+  if(o.address) return o.address;            // nouveau format
+  const parts=[];                            // anciens enregistrements
+  if(o.av) parts.push("av/ "+o.av.replace(/^av\/?\s*/i,''));
+  if(o.ref) parts.push(o.ref);
+  return parts.join(", ");
+}
+
+/* ---------------- Ajouter une commande ---------------- */
+function addOrder(){
+  let zone, code;
+  if(curMode==="yesterday"){
+    const parsed=parseCode(document.getElementById('f-code').value);
+    if(!parsed){ showToast("Étiquette invalide (ex. A2)"); return; }
+    if(codeExists(parsed.raw)){ showToast(parsed.raw+" existe déjà"); return; }
+    zone=parsed.zone; code=parsed.raw;
+  }else{
+    zone=getZoneFromForm(); if(!zone)return;
+    code=nextCodeFor(zone);
+  }
+  const o={
+    id:Date.now()+"_"+Math.random().toString(36).slice(2,7),
+    code, zone,
+    name:document.getElementById('f-name').value.trim(),
+    commune:document.getElementById('f-commune').value,
+    address:document.getElementById('f-address').value.trim(),
+    phone:document.getElementById('f-phone').value.trim(),
+    qty:Math.max(1,parseInt(document.getElementById('f-qty').value||"1",10)),
+    type:curType,
+    total:computeTotal(),
+    done:false,
+    carried: curMode==="yesterday"
+  };
+  state.orders.push(o);
+  state.orders.sort((a,b)=>a.zone===b.zone ? (parseInt(a.code.slice(1))-parseInt(b.code.slice(1))) : a.zone.localeCompare(b.zone));
+  saveState(); render();
+  showToast(`${o.code} ${o.carried?'repris':'ajouté'} · ${ZONES[zone].label}`);
+  // reset champs (garde la commune pour saisies rapides du même secteur)
+  ['f-name','f-address','f-phone','f-special','f-code','f-paste'].forEach(id=>document.getElementById(id).value="");
+  document.getElementById('pasteSummary').innerHTML="";
+  document.getElementById('f-qty').value="1";
+  setType("standard");
+  if(curMode==="yesterday") setMode("new");
+  document.getElementById('f-name').focus();
+  refreshForm();
+}
+
+/* ---------------- Type selector ---------------- */
+function setType(t){
+  curType=t;
+  document.querySelectorAll('.type-opt').forEach(b=>b.classList.toggle('sel',b.dataset.type===t));
+  refreshForm();
+}
+
+/* ---------------- Rendu des zones ---------------- */
+function render(){
+  const wrap=document.getElementById('zones'); wrap.innerHTML="";
+  let counts={A:0,B:0,C:0};
+  Object.keys(ZONES).forEach(z=>{
+    const orders=state.orders.filter(o=>o.zone===z);
+    counts[z]=orders.length;
+    const sum=orders.reduce((s,o)=>s+(o.total||0),0);
+    const pending=orders.filter(o=>!o.done).length;
+    const cls={A:"za",B:"zb",C:"zc"}[z];
+
+    const sec=document.createElement('section');
+    sec.className="zone "+cls;
+    sec.innerHTML=`
+      <div class="zone-top">
+        <div class="row1">
+          <div class="zone-letter">${z}<small>${ZONES[z].name}</small></div>
+          <div class="zone-stats"><b>${orders.length} colis</b>${fmt(sum)} à encaisser</div>
+        </div>
+        <div class="zone-line">
+          <span class="zl-lbl">${ZONES[z].label} · Livreur de la semaine</span>
+          <span class="zl-phone">${esc(ZONES[z].phone)}</span>
+        </div>
+      </div>
+      <div class="zone-body">${ orders.length? orders.map(o=>orderHTML(o)).join("") :
+        `<div class="empty"><b>Aucune livraison</b>Les commandes des communes de cette zone arriveront ici.</div>` }</div>
+      <div class="zone-foot">
+        <button class="wa-btn" data-wa="${z}" ${orders.length?'':'disabled'}>
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 00-8.5 15.3L2 22l4.8-1.5A10 10 0 1012 2zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.5-3.9-4.7-4.1-.1-.2-1-1.4-1-2.6 0-1.2.6-1.8.9-2.1.2-.2.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.3 0 .5l-.4.6c-.2.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.4 2.4 1.5.2.1.4.1.5-.1l.7-.9c.2-.2.3-.2.6-.1l1.9.9c.3.1.5.2.5.3.1.2.1.6 0 1z"/></svg>
+          Envoyer au livreur ${z}
+        </button>
+        <button class="foot-btn" data-copy="${z}" ${orders.length?'':'disabled'}>Copier</button>
+        <button class="foot-btn" data-print="${z}" ${orders.length?'':'disabled'}>
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M4 6V2h8v4M4 12H3a1 1 0 01-1-1V8a1 1 0 011-1h10a1 1 0 011 1v3a1 1 0 01-1 1h-1M4 10h8v4H4z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
+          Imprimer
+        </button>
+      </div>`;
+    wrap.appendChild(sec);
+  });
+  document.getElementById('rA').textContent=counts.A;
+  document.getElementById('rB').textContent=counts.B;
+  document.getElementById('rC').textContent=counts.C;
+  bindZoneEvents();
+  document.getElementById('nextCode'); refreshForm();
+}
+
+function orderHTML(o){
+  const typeTag = o.type==="special"
+    ? `<span class="tag special">Spécial</span>`
+    : `<span class="tag">${o.type==="premium"?"Premium":"Standard"}</span>`;
+  const meta=[o.commune, addrText(o)||null]
+    .filter(Boolean).join(' <span class="sep">·</span> ');
+  const waClient = o.phone ? sanitizeClient(o.phone) : "";
+  const phoneHTML = waClient
+    ? ` <span class="sep">·</span> <a class="wa-link" href="https://wa.me/${waClient}" target="_blank" rel="noopener">wa.me/${waClient}</a>`
+    : "";
+  return `
+    <div class="order ${o.done?'done':''}" data-id="${o.id}">
+      <div class="code">${o.code}</div>
+      <div class="o-main">
+        <div class="o-name">${esc(o.name)}</div>
+        <div class="o-meta">${meta}${phoneHTML}</div>
+        <div class="o-tags">
+          <span class="tag">${o.qty} pochette${o.qty>1?'s':''}</span>
+          ${typeTag}
+          ${o.carried?`<span class="tag carried">↩ hier</span>`:``}
+          <span class="tag price">${fmt(o.total)}</span>
+        </div>
+      </div>
+      <div class="o-actions">
+        <button class="icon-btn check ${o.done?'on':''}" data-check="${o.id}" title="Marquer livré">
+          <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M3 8.5l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <button class="icon-btn del" data-del="${o.id}" title="Supprimer">
+          <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M3 4h10M6.5 4V3h3v1M5 4l.5 9h5L11 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </div>`;
+}
+
+/* ---------------- Message WhatsApp ---------------- */
+function buildMessage(z){
+  const orders=state.orders.filter(o=>o.zone===z);
+  const d=new Date().toLocaleDateString('fr-FR',{day:'2-digit',month:'2-digit',year:'numeric'});
+  let m=`🧾 *BK POCHETTE CONGO* — ${ZONES[z].label} · ${ZONES[z].name}\n`;
+  m+=`📅 ${d}\n`;
+  m+=`────────────────\n`;
+  orders.forEach(o=>{
+    m+=`*${o.code}* — ${o.name}\n`;
+    let loc=o.commune; const a=addrText(o); if(a)loc+=`, ${a}`;
+    m+=`📍 ${loc}\n`;
+    const wc=sanitizeClient(o.phone); if(wc)m+=`📞 wa.me/${wc}\n`;
+    m+=`📦 ${o.qty} pochette${o.qty>1?'s':''} · ${o.type==='special'?'Spécial':(o.type==='premium'?'Premium':'Standard')} · *${fmt(o.total)}*\n`;
+    m+=`────────────────\n`;
+  });
+  const sum=orders.reduce((s,o)=>s+(o.total||0),0);
+  m+=`✅ Total : ${orders.length} colis · *${fmt(sum)}* à encaisser`;
+  return m;
+}
+function sanitizeClient(p){
+  let d=(p||"").replace(/[^\d]/g,"");
+  if(!d) return "";
+  if(d.startsWith("243")) return d;
+  if(d.startsWith("0"))   return "243"+d.slice(1);
+  if(d.length===9)        return "243"+d;
+  return d;
+}
+function sanitizePhone(p){ let d=(p||"").replace(/[^\d]/g,"");
+  if(d.startsWith("0")) d="243"+d.slice(1);
+  return d;
+}
+function sendWhatsApp(z){
+  const msg=buildMessage(z);
+  const phone=sanitizePhone(ZONES[z].phone);
+  const base = phone ? `https://wa.me/${phone}?text=` : `https://wa.me/?text=`;
+  window.open(base+encodeURIComponent(msg),"_blank");
+}
+async function copyMessage(z){
+  const msg=buildMessage(z);
+  try{ await navigator.clipboard.writeText(msg); showToast("Liste "+z+" copiée"); }
+  catch(e){ showToast("Copie impossible — utilisez WhatsApp"); }
+}
+
+/* ---------------- Impression feuille livreur ---------------- */
+function zoneSheetHTML(z){
+  const orders=state.orders.filter(o=>o.zone===z);
+  const sum=orders.reduce((s,o)=>s+(o.total||0),0);
+  const accent={A:"#D97A06",B:"#0E8C7F",C:"#C42A6B"}[z];
+  const d=new Date().toLocaleDateString('fr-FR',{weekday:'long',day:'2-digit',month:'long',year:'numeric'});
+  const rows=orders.map(o=>{
+    let loc=esc(o.commune); const a=addrText(o); if(a)loc+=`, ${esc(a)}`;
+    const wc=sanitizeClient(o.phone);
+    const typ=o.type==='special'?'Spécial':(o.type==='premium'?'Premium':'Standard');
+    return `<tr>
+      <td class="chk"></td>
+      <td class="code">${o.code}${o.carried?' ↩':''}</td>
+      <td><b>${esc(o.name)}</b><div class="loc">${loc}</div></td>
+      <td class="tel">${wc?('+'+wc):'—'}</td>
+      <td class="qt">${o.qty} · ${typ}</td>
+      <td class="mt">${fmt(o.total)}</td>
+      <td class="sign"></td>
+    </tr>`;
+  }).join("");
+  return `<section class="sheet">
+    <div class="head" style="border-color:${accent}">
+      <div>
+        <div class="brand">BK POCHETTE CONGO</div>
+        <div class="sub">Feuille de livraison</div>
+      </div>
+      <div class="zbox" style="background:${accent}">
+        <div class="zl">${z}</div><div class="zn">${ZONES[z].name}</div>
+      </div>
+    </div>
+    <div class="meta">
+      <span><b>${ZONES[z].label}</b> — ${ZONES[z].name}</span>
+      <span>${d}</span>
+      <span>Livreur : ____________________</span>
+    </div>
+    <table>
+      <thead><tr>
+        <th class="chk">✓</th><th>Code</th><th>Client &amp; adresse</th><th>Téléphone</th><th>Qté / Type</th><th>Montant</th><th>Signature client</th>
+      </tr></thead>
+      <tbody>${rows||`<tr><td colspan="7" style="text-align:center;padding:24px;color:#888">Aucune livraison</td></tr>`}</tbody>
+    </table>
+    <div class="foot">
+      <div>Total : <b>${orders.length} colis</b></div>
+      <div>À encaisser : <b>${fmt(sum)}</b></div>
+      <div>Montant remis : __________</div>
+      <div>Signature livreur : __________________</div>
+    </div>
+  </section>`;
+}
+function printZones(zoneKeys){
+  const sheets=zoneKeys.map(zoneSheetHTML).join("");
+  const css=`
+    *{margin:0;padding:0;box-sizing:border-box;font-family:Arial,Helvetica,sans-serif}
+    body{color:#111;padding:14px}
+    .sheet{page-break-after:always;padding:4px}
+    .sheet:last-child{page-break-after:auto}
+    .head{display:flex;justify-content:space-between;align-items:center;border-bottom:3px solid #111;padding-bottom:8px;margin-bottom:8px}
+    .brand{font-size:19px;font-weight:800;letter-spacing:.5px}
+    .sub{font-size:12px;color:#555;margin-top:2px;text-transform:uppercase;letter-spacing:1px}
+    .zbox{color:#fff;text-align:center;border-radius:8px;padding:7px 14px;min-width:74px}
+    .zbox .zl{font-size:24px;font-weight:800;line-height:1}
+    .zbox .zn{font-size:11px;letter-spacing:.5px;margin-top:2px}
+    .meta{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;font-size:12px;margin-bottom:10px;color:#333}
+    table{width:100%;border-collapse:collapse;font-size:11.5px}
+    th,td{border:1px solid #999;padding:6px 7px;text-align:left;vertical-align:top}
+    th{background:#f0f0f0;font-size:10.5px;text-transform:uppercase;letter-spacing:.3px}
+    .chk{width:26px;text-align:center}
+    td.chk{height:30px}
+    .code{font-weight:800;white-space:nowrap}
+    .loc{font-size:10.5px;color:#444;margin-top:2px}
+    .tel{white-space:nowrap;font-size:11px}
+    .qt{white-space:nowrap}
+    .mt{font-weight:700;white-space:nowrap}
+    .sign{width:120px}
+    .foot{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-top:12px;padding-top:10px;border-top:2px solid #111;font-size:12.5px}
+    @media print{body{padding:0}@page{margin:12mm}}
+  `;
+  const w=window.open("","_blank");
+  if(!w){ showToast("Autorise les pop-ups pour imprimer"); return; }
+  w.document.write(`<!DOCTYPE html><html><head><meta charset="utf-8"><title>Feuille de livraison BK</title><style>${css}</style></head><body>${sheets}<scr`+`ipt>window.onload=function(){setTimeout(function(){window.print();},250);}</scr`+`ipt></body></html>`);
+  w.document.close();
+}
+
+/* ---------------- Coller-analyser depuis WhatsApp ---------------- */
+function norm(s){ return (s||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,""); }
+function clean(s){ return (s||"").replace(/\s+/g," ").trim().slice(0,60); }
+
+// Alias par commune (sans accents). Clé = valeur exacte de l'option commune.
+const COMMUNE_ALIASES = {
+  "Gombe":["gombe"], "Lingwala":["lingwala"],
+  "Kasa-Vubu":["kasa vubu","kasavubu"], "Ngiri-Ngiri":["ngiri ngiri","ngiringiri","ngiri"],
+  "Barumbu":["barumbu"], "Kalamu":["kalamu"],
+  "Ngaliema":["ngaliema"], "Mont-Ngafula":["mont ngafula","montngafula","ngafula"],
+  "Selembao":["selembao"], "Bumbu":["bumbu"], "Makala":["makala"],
+  "Kintambo":["kintambo","kitambo"], "Bandalungwa":["bandalungwa","bandal"],
+  "Lemba":["lemba"], "Kisenso":["kisenso","kinsenso"], "N'sele":["nsele","n sele"],
+  "Matete":["matete"], "Ndjili":["ndjili","ndjile"], "Maluku":["maluku"],
+  "Limete":["limete","limette"], "Masina":["masina"], "Ngaba":["ngaba"],
+  "Kimbanseke":["kimbanseke"],
+  "Kinshasa":["kinshasa"]   // vérifié en dernier (souvent = nom de la ville)
+};
+function aliasRegex(alias){
+  const parts=alias.split(/[\s'-]+/).map(p=>p.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'));
+  return new RegExp("(^|[^a-z])"+parts.join("[\\s'-]*")+"([^a-z]|$)");
+}
+function extractCommune(text){
+  const m=norm(text);
+  for(const commune of Object.keys(COMMUNE_ALIASES)){
+    for(const a of COMMUNE_ALIASES[commune]){
+      if(aliasRegex(a).test(m)) return commune;
+    }
+  }
+  return "";
+}
+function extractPhone(text){
+  const cands=text.match(/(\+?\d[\d\s().\-]{7,}\d)/g)||[];
+  for(const c of cands){
+    const d=c.replace(/[^\d]/g,"");
+    if(/^0\d{9}$/.test(d)) return d;
+    if(/^243\d{9}$/.test(d)) return "+"+d;
+    if(/^\d{9}$/.test(d) && /^[89]/.test(d)) return "0"+d;
+  }
+  for(const c of cands){ const d=c.replace(/[^\d]/g,""); if(d.length>=9&&d.length<=12) return d; }
+  return "";
+}
+function extractQty(text){
+  const t=norm(text);
+  let m=t.match(/(\d{1,2})\s*(?:x\s*)?(?:pochette|poche|pcs|piece|pieces|unite|unites|colis|sac|sacs)/);
+  if(m) return Math.min(99,Math.max(1,parseInt(m[1])));
+  m=t.match(/(?:quantite|qty|qte|nombre|nbr?)\s*[:=]?\s*(\d{1,2})/);
+  if(m) return Math.min(99,Math.max(1,parseInt(m[1])));
+  m=t.match(/(?:^|[\s,;(])x\s*(\d{1,2})\b/);
+  if(m) return Math.min(99,Math.max(1,parseInt(m[1])));
+  return null;
+}
+function extractType(text){
+  const t=norm(text);
+  if(/special|specia/.test(t)) return "special";
+  if(/premium|premuim|prenium|prem\b/.test(t)) return "premium";
+  if(/standard|standar|std\b|normal|simple|basic/.test(t)) return "standard";
+  return null;
+}
+function cutName(s){
+  return clean((s||"").split(/[,;\n.]|\s+(?:et|habite|a|à|au|aux|chez|sur|vers|dans|quartier|commune|tel|telephone|contact|num[eé]ro|no|veut|veux|commande)\s+/i)[0]);
+}
+function extractName(text){
+  for(const line of text.split(/\n/)){
+    const m=line.match(/^\s*(?:nom|name|client|nom\s+du\s+client)\s*[:\-]\s*(.+)$/i);
+    if(m) return cutName(m[1]);
+  }
+  let m=text.match(/(?:je\s+m['’]appelle|je\s+suis|moi\s+c['’]est|c['’]est|ici)\s+([A-Za-zÀ-ÿ][A-Za-zÀ-ÿ'’ \-]{1,38})/i);
+  if(m){ const n=cutName(m[1]); if(n.length>=2) return n; }
+  let p=text.match(/\bpour\s+(?:m(?:me|r|lle)?\.?|madame|monsieur|mademoiselle)\s+([A-Za-zÀ-ÿ][A-Za-zÀ-ÿ'’ \-]{1,38})/i);
+  if(p){ const n=cutName(p[1]); if(n.length>=2 && !/^\d/.test(n)) return n; }
+  return "";
+}
+function extractAddress(text){
+  for(const line of text.split(/\n/)){
+    const m=line.match(/^\s*(?:adresse|avenue|rue|reference|r[eé]f[eé]rence|rep[eè]re|localisation)\s*[:\-]\s*(.+)$/i);
+    if(m) return clean(m[1]);
+  }
+  const parts=[];
+  let m=text.match(/\bav(?:enue)?\b\.?\/?\s*([^\n,;]+)/i);
+  if(m) parts.push("av/ "+clean(m[1]));
+  let n=text.match(/\b(?:n[o°]|num[eé]ro|no)\s*\.?\s*(\d{1,4})/i);
+  if(n && !/\bav/i.test(parts.join(""))) parts.push("n°"+n[1]);
+  let r=text.match(/\b(?:pr[eè]s\s+(?:de|du)|derri[eè]re|face\s+[aà]|[aà]\s+c[oô]t[eé]\s+de|en\s+face)\b[^\n,;.]*/i);
+  if(r) parts.push(clean(r[0]));
+  return parts.join(", ");
+}
+function parseOrder(text){
+  return {
+    name:extractName(text),
+    commune:extractCommune(text),
+    phone:extractPhone(text),
+    qty:extractQty(text),
+    type:extractType(text),
+    address:extractAddress(text)
+  };
+}
+function analyzePaste(){
+  const text=document.getElementById('f-paste').value;
+  if(!text.trim()){ showToast("Colle d'abord le message du client"); return; }
+  const r=parseOrder(text);
+  if(curMode!=="new") setMode("new");
+  if(r.name) document.getElementById('f-name').value=r.name;
+  if(r.commune) document.getElementById('f-commune').value=r.commune;
+  if(r.phone) document.getElementById('f-phone').value=r.phone;
+  if(r.address) document.getElementById('f-address').value=r.address;
+  if(r.qty) document.getElementById('f-qty').value=r.qty;
+  if(r.type){ setType(r.type); } else { refreshForm(); }
+  renderPasteSummary(r);
+  const found=[r.name,r.commune,r.phone].filter(Boolean).length;
+  showToast(found>=2 ? "Formulaire pré-rempli — vérifie puis valide" : "Peu d'infos détectées — complète à la main");
+}
+function renderPasteSummary(r){
+  const chip=(cls,txt)=>`<span class="chip ${cls}">${txt}</span>`;
+  const box=document.getElementById('pasteSummary'); let h="";
+  h+= r.name ? chip("ok","✓ "+esc(r.name)) : chip("miss","⚠ Nom à compléter");
+  h+= r.commune ? chip("ok","✓ "+esc(r.commune)+" · Zone "+COMMUNE_ZONE[r.commune]) : chip("miss","⚠ Commune à choisir");
+  h+= r.phone ? chip("ok","✓ "+esc(r.phone)) : chip("miss","⚠ Téléphone à saisir");
+  h+= r.qty ? chip("ok","✓ "+r.qty+" pochette"+(r.qty>1?"s":"")) : chip("def","Qté : 1 (défaut)");
+  h+= r.type ? chip("ok","✓ "+(r.type==="premium"?"Premium":r.type==="special"?"Spécial":"Standard")) : chip("def","Type : Standard (défaut)");
+  if(r.address) h+= chip("ok","✓ adresse");
+  box.innerHTML=h;
+}
+
+/* ---------------- Events ---------------- */
+function bindZoneEvents(){
+  document.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{
+    state.orders=state.orders.filter(o=>o.id!==b.dataset.del); saveState(); render(); showToast("Commande supprimée");
+  });
+  document.querySelectorAll('[data-check]').forEach(b=>b.onclick=()=>{
+    const o=state.orders.find(o=>o.id===b.dataset.check); if(o){o.done=!o.done; saveState(); render();}
+  });
+  document.querySelectorAll('[data-wa]').forEach(b=>b.onclick=()=>sendWhatsApp(b.dataset.wa));
+  document.querySelectorAll('[data-copy]').forEach(b=>b.onclick=()=>copyMessage(b.dataset.copy));
+  document.querySelectorAll('[data-print]').forEach(b=>b.onclick=()=>printZones([b.dataset.print]));
+}
+
+function esc(s){return (s||"").replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+
+let toastTimer=null;
+function showToast(t){
+  const el=document.getElementById('toast'); el.textContent=t; el.classList.add('show');
+  clearTimeout(toastTimer); toastTimer=setTimeout(()=>el.classList.remove('show'),2200);
+}
+
+/* ---------------- Sauvegarde / export / restauration ---------------- */
+function dateStamp(){ const d=new Date(),p=n=>String(n).padStart(2,'0'); return d.getFullYear()+"-"+p(d.getMonth()+1)+"-"+p(d.getDate()); }
+function downloadFile(name,content,type){
+  const blob=new Blob([content],{type}); const url=URL.createObjectURL(blob);
+  const a=document.createElement('a'); a.href=url; a.download=name; document.body.appendChild(a); a.click();
+  setTimeout(()=>{URL.revokeObjectURL(url); a.remove();},120);
+}
+function exportBackup(){
+  if(state.orders.length===0){ showToast("Rien à sauvegarder"); return; }
+  const data=JSON.stringify({app:"BK Pochette Congo",version:1,exportedAt:new Date().toISOString(),orders:state.orders},null,2);
+  downloadFile("bk-sauvegarde-"+dateStamp()+".json",data,"application/json");
+  showToast("Sauvegarde téléchargée");
+}
+function csvCell(v){ v=(v==null?"":String(v)); return /[";\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v; }
+function exportCSV(){
+  if(state.orders.length===0){ showToast("Aucune commande à exporter"); return; }
+  const head=["Code","Zone","Nom","Commune","Adresse","Telephone","Quantite","Type","Montant","Livre"];
+  const rows=[head];
+  state.orders.forEach(o=>rows.push([o.code,o.zone,o.name,o.commune,addrText(o),o.phone,o.qty,
+    (o.type==='premium'?'Premium':o.type==='special'?'Special':'Standard'),o.total,o.done?'oui':'non']));
+  const csv="\uFEFF"+rows.map(r=>r.map(csvCell).join(";")).join("\r\n");
+  downloadFile("bk-commandes-"+dateStamp()+".csv",csv,"text/csv;charset=utf-8");
+  showToast("Fichier Excel (CSV) téléchargé");
+}
+function importBackup(file){
+  const r=new FileReader();
+  r.onload=()=>{
+    try{
+      const p=JSON.parse(r.result);
+      const orders=Array.isArray(p)?p:(p.orders||(p.state&&p.state.orders));
+      if(!Array.isArray(orders)) throw 0;
+      if(confirm("Remplacer les commandes actuelles par la sauvegarde ("+orders.length+" commande(s)) ?")){
+        state.orders=orders; saveState(); render(); showToast("Sauvegarde restaurée");
+      }
+    }catch(e){ showToast("Fichier de sauvegarde invalide"); }
+  };
+  r.readAsText(file);
+}
+
+/* ---------------- Init ---------------- */
+function init(){
+  fillCommunes();
+  loadState();
+  updateStoreNote();
+  render();
+
+  document.getElementById('f-commune').addEventListener('change',refreshForm);
+  ['f-name','f-qty','f-special','f-address','f-phone','f-code'].forEach(id=>
+    document.getElementById(id).addEventListener('input',refreshForm));
+  document.getElementById('types').addEventListener('click',e=>{
+    const b=e.target.closest('.type-opt'); if(b)setType(b.dataset.type);
+  });
+  document.getElementById('modeSwitch').addEventListener('click',e=>{
+    const b=e.target.closest('.mode-opt'); if(b)setMode(b.dataset.mode);
+  });
+
+  // Coller-analyser depuis WhatsApp
+  document.getElementById('pasteToggle').addEventListener('click',()=>{
+    const box=document.getElementById('pasteBox');
+    const open = box.style.display==="none";
+    box.style.display = open ? "" : "none";
+    if(open) document.getElementById('f-paste').focus();
+  });
+  document.getElementById('pasteGo').addEventListener('click',analyzePaste);
+  document.getElementById('f-paste').addEventListener('paste',()=>{ setTimeout(analyzePaste,60); });
+  document.getElementById('pasteClear').addEventListener('click',()=>{
+    document.getElementById('f-paste').value="";
+    document.getElementById('pasteSummary').innerHTML="";
+    document.getElementById('f-paste').focus();
+  });
+  document.getElementById('addBtn').addEventListener('click',addOrder);
+  document.getElementById('f-name').addEventListener('keydown',e=>{
+    if(e.key==='Enter' && !document.getElementById('addBtn').disabled) addOrder();
+  });
+
+  document.getElementById('printAllBtn').addEventListener('click',()=>{
+    if(state.orders.length===0){ showToast("Aucune livraison à imprimer"); return; }
+    printZones(["A","B","C"]);
+  });
+  document.getElementById('newDayBtn').addEventListener('click',()=>{
+    const delivered=state.orders.filter(o=>o.done).length;
+    const pending=state.orders.filter(o=>!o.done).length;
+    if(state.orders.length===0){ showToast("Aucune livraison enregistrée"); return; }
+    if(confirm(`Nouvelle journée :\n• ${delivered} commande(s) livrée(s) seront retirées\n• ${pending} non livrée(s) seront conservées avec leur étiquette\n\nContinuer ?`)){
+      state.orders=state.orders.filter(o=>!o.done);
+      state.orders.forEach(o=>o.carried=true);
+      saveState(); render(); showToast("Nouvelle journée — non livrées conservées");
+    }
+  });
+  document.getElementById('clearAllBtn').addEventListener('click',()=>{
+    if(state.orders.length===0){ showToast("La liste est déjà vide"); return; }
+    if(confirm("Tout effacer et repartir à A1, B1, C1 ?\nCette action supprime TOUTES les commandes, livrées ou non.")){
+      state.orders=[]; saveState(); render(); showToast("Listes vidées — numérotation remise à zéro");
+    }
+  });
+
+  document.getElementById('backupBtn').addEventListener('click',exportBackup);
+  document.getElementById('csvBtn').addEventListener('click',exportCSV);
+  document.getElementById('restoreBtn').addEventListener('click',()=>document.getElementById('restoreInput').click());
+  document.getElementById('restoreInput').addEventListener('change',e=>{
+    const f=e.target.files[0]; if(f) importBackup(f); e.target.value="";
+  });
+
+  setMode("new");
+  refreshForm();
+}
+init();
+
+// Service worker — rend l'app installable et utilisable hors connexion
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>{ navigator.serviceWorker.register('./sw.js').catch(()=>{}); });
+}
+</script>
+</body>
+</html>
