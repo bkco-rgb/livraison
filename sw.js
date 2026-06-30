@@ -1,6 +1,6 @@
 // BK Pochette Congo — Service Worker
 // Met l'application en cache pour qu'elle fonctionne hors connexion.
-const CACHE = "bk-pochette-v1";
+const CACHE = "bk-pochette-v2";
 const ASSETS = [
   "./",
   "./index.html",
