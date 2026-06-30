@@ -61,12 +61,59 @@
   .ribbon{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
   .pill{
     display:flex;align-items:center;gap:7px;background:rgba(255,255,255,.07);
-    border:1px solid rgba(255,255,255,.09);border-radius:999px;padding:6px 11px 6px 9px;font-size:12px;color:#D6D9E1
+    border:1px solid rgba(255,255,255,.09);border-radius:999px;padding:7px 11px 7px 9px;font-size:12px;color:#D6D9E1;cursor:pointer;transition:.15s
   }
+  .pill:hover{background:rgba(255,255,255,.13)}
+  .pill:active{transform:scale(.97)}
   .pill .dot{width:9px;height:9px;border-radius:50%}
   .pill b{font-family:var(--font-d);color:#fff;font-weight:600}
+  .pill-go{color:rgba(255,255,255,.5);font-size:15px;font-weight:700;margin-left:1px}
+
+  .back-btn{display:inline-flex;align-items:center;gap:7px;background:var(--paper);border:1px solid var(--line);color:var(--ink-soft);font-weight:600;font-size:13.5px;padding:10px 14px;border-radius:10px;margin-bottom:14px}
+  .back-btn:active{transform:scale(.98)}
+  .zone-focus-intro{font-size:13px;color:var(--ink-soft);background:var(--paper);border:1px solid var(--line);border-radius:11px;padding:12px 14px;margin-bottom:14px;line-height:1.5}
+  .zone-focus-intro b{color:var(--ink)}
+  .report-bar{margin-top:14px}
+  .report-btn{width:100%;background:var(--a);color:#fff;font-family:var(--font-d);font-weight:600;font-size:14.5px;padding:14px;border-radius:12px;display:flex;align-items:center;justify-content:center;gap:9px;box-shadow:var(--shadow)}
+  .report-btn:active{transform:scale(.985)}
+  .report-btn:disabled{background:#E2E4EA;color:var(--ink-faint);box-shadow:none}
+  .report-note{font-size:11.5px;color:var(--ink-faint);text-align:center;margin-top:8px;line-height:1.45}
 
   main{max-width:920px;margin:0 auto;padding:18px 16px 0}
+
+  .tabs{display:flex;gap:8px;margin-bottom:16px;background:#E3E5EA;padding:5px;border-radius:13px}
+  .tab{flex:1;padding:11px;border-radius:9px;font-family:var(--font-d);font-weight:600;font-size:14px;color:var(--ink-soft);display:flex;align-items:center;justify-content:center;gap:7px;transition:.15s}
+  .tab.sel{background:#fff;color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.1)}
+  .tab-count{background:var(--ink);color:#fff;font-size:11px;border-radius:999px;padding:1px 7px;min-width:20px}
+  .tab.sel .tab-count{background:var(--c)}
+
+  .cli-head{padding:16px}
+  .cli-stats{display:flex;gap:10px;margin-bottom:14px}
+  .cli-stats>div{flex:1;background:#F6F7F9;border:1px solid var(--line);border-radius:11px;padding:11px;text-align:center}
+  .cli-stats b{display:block;font-family:var(--font-d);font-size:21px;line-height:1.1}
+  .cli-stats span{font-size:11px;color:var(--ink-faint)}
+  #cliSearch{width:100%;background:#F8F9FB;border:1px solid var(--line);border-radius:10px;padding:11px 12px;font-size:14.5px;color:var(--ink)}
+  #cliSearch:focus{outline:none;border-color:var(--ink);background:#fff}
+  .cli-row{display:flex;gap:8px;margin-top:9px}
+  .cli-row select{flex:1;min-width:0;appearance:none;background:#F8F9FB;border:1px solid var(--line);border-radius:10px;padding:10px 26px 10px 10px;font-size:12.5px;color:var(--ink);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238A909E' stroke-width='1.6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 9px center}
+  #cliExportBtn{width:100%;margin-top:12px;text-align:center}
+
+  .cli-list{display:flex;flex-direction:column;gap:10px;margin-top:16px}
+  .cli-card{background:var(--paper);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);padding:13px 14px;display:flex;gap:12px;align-items:flex-start}
+  .cli-card .cl-main{flex:1;min-width:0}
+  .cl-name{font-family:var(--font-d);font-weight:600;font-size:15px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .cl-badge{font-family:var(--font-b);font-size:11px;font-weight:600;background:var(--ink);color:#fff;border-radius:6px;padding:2px 8px}
+  .cl-badge.loyal{background:var(--c)}
+  .cl-meta{font-size:12.5px;color:var(--ink-soft);margin-top:4px;line-height:1.5}
+  .cl-meta .sep{color:var(--ink-faint)}
+  .cl-types{margin-top:5px;display:flex;gap:6px;flex-wrap:wrap}
+  .cl-types .tag{font-size:11px;font-weight:600;padding:2px 8px;border-radius:6px;background:var(--line-soft);color:var(--ink-soft)}
+  .cl-side{display:flex;flex-direction:column;align-items:flex-end;gap:8px;flex:0 0 auto}
+  .cl-total{font-family:var(--font-d);font-weight:700;font-size:16px}
+  .cl-wa{background:#25D366;color:#0A3D22;font-weight:700;font-size:12px;padding:8px 10px;border-radius:9px;display:flex;align-items:center;gap:6px}
+  .cl-wa:active{transform:scale(.96)}
+  .cl-empty{padding:34px 16px;text-align:center;color:var(--ink-faint);font-size:13.5px}
+  .cl-empty b{display:block;font-family:var(--font-d);color:var(--ink-soft);font-size:15px;margin-bottom:4px}
 
   /* ---------- Card / form ---------- */
   .card{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
@@ -227,13 +274,19 @@
     </div>
   </div>
   <div class="ribbon">
-    <div class="pill"><span class="dot" style="background:var(--a)"></span> Zone A <b id="rA">0</b></div>
-    <div class="pill"><span class="dot" style="background:var(--b)"></span> Zone B <b id="rB">0</b></div>
-    <div class="pill"><span class="dot" style="background:var(--c)"></span> Zone C <b id="rC">0</b></div>
+    <button class="pill" data-zone="A"><span class="dot" style="background:var(--a)"></span> Zone A <b id="rA">0</b><span class="pill-go">›</span></button>
+    <button class="pill" data-zone="B"><span class="dot" style="background:var(--b)"></span> Zone B <b id="rB">0</b><span class="pill-go">›</span></button>
+    <button class="pill" data-zone="C"><span class="dot" style="background:var(--c)"></span> Zone C <b id="rC">0</b><span class="pill-go">›</span></button>
   </div>
 </header>
 
 <main>
+  <div class="tabs">
+    <button class="tab sel" data-tab="liv">Livraisons</button>
+    <button class="tab" data-tab="cli">Base clients <span class="tab-count" id="tabCliCount">0</span></button>
+  </div>
+
+  <div id="page-liv">
   <!-- ====== Formulaire ====== -->
   <section class="card form-card">
     <div class="form-head">
@@ -351,6 +404,27 @@
       <input type="file" id="restoreInput" accept="application/json,.json" style="display:none">
     </div>
   </div>
+  </div><!-- /page-liv -->
+
+  <div id="page-cli" style="display:none">
+    <section class="card cli-head">
+      <div class="cli-stats">
+        <div><b id="cliTotal">0</b><span>clients</span></div>
+        <div><b id="cliLoyal">0</b><span>fidèles (2+)</span></div>
+        <div><b id="cliRevenue">0$</b><span>cumulé</span></div>
+      </div>
+      <input type="text" id="cliSearch" placeholder="Rechercher un nom ou un numéro…">
+      <div class="cli-row">
+        <select id="cliCommune"><option value="">Toutes communes</option></select>
+        <select id="cliType"><option value="">Tous types</option><option value="premium">Premium</option><option value="standard">Standard</option></select>
+        <select id="cliSort"><option value="orders">Plus de commandes</option><option value="total">Plus dépensé</option><option value="recent">Plus récents</option><option value="name">Nom (A→Z)</option></select>
+      </div>
+      <button class="reset-btn save" id="cliExportBtn">Exporter les clients (Excel/CSV)</button>
+    </section>
+    <div id="cliList" class="cli-list"></div>
+  </div>
+
+  <div id="page-zone" style="display:none"></div>
 </main>
 
 <div class="toast" id="toast"></div>
@@ -369,20 +443,20 @@ const ZONE_VAR = {A:"--a",B:"--b",C:"--c"};
 
 /* ---------------- État + stockage ---------------- */
 const STORE_KEY = "bkpc_state_v1";
-let state = { orders:[] };
+let state = { orders:[], clients:{} };
 let memoryOnly = false;
 
 function loadState(){
   try{
     const raw = localStorage.getItem(STORE_KEY);
-    if(raw){ const p = JSON.parse(raw); state.orders = p.orders||[]; }
+    if(raw){ const p = JSON.parse(raw); state.orders = p.orders||[]; state.clients = p.clients||{}; }
   }catch(e){
     memoryOnly = true;
   }
 }
 function saveState(){
   try{
-    localStorage.setItem(STORE_KEY, JSON.stringify({orders:state.orders}));
+    localStorage.setItem(STORE_KEY, JSON.stringify({orders:state.orders, clients:state.clients}));
     if(memoryOnly){ memoryOnly=false; updateStoreNote(); }
   }catch(e){
     memoryOnly = true; updateStoreNote();
@@ -392,6 +466,45 @@ function updateStoreNote(){
   const n=document.getElementById('storeNote'), t=document.getElementById('storeTxt');
   if(memoryOnly){ n.classList.add('warn'); t.textContent="Mode sans sauvegarde — données perdues à la fermeture"; }
   else{ n.classList.remove('warn'); t.textContent="Enregistré sur cet appareil"; }
+}
+
+/* ---------------- Base clients ---------------- */
+function clientKey(phone, name, zone){
+  const k=sanitizeClient(phone);
+  if(k) return "t:"+k;
+  const n=norm(name||"").trim();
+  return n ? "n:"+(zone||"")+":"+n : null;
+}
+// Ajoute (sign=+1) ou retire (sign=-1) la contribution d'une commande à la fiche client
+function applyToBase(o, sign){
+  const key=clientKey(o.phone, o.name, o.zone);
+  if(!key) return;
+  let c=state.clients[key];
+  if(!c){
+    if(sign<0) return;
+    c={key, phone:o.phone||"", name:o.name||"", communes:{}, types:{}, orders:0, total:0, qty:0, lastDate:null, noPhone:!sanitizeClient(o.phone)};
+    state.clients[key]=c;
+  }
+  c.orders += sign;
+  c.total  += sign*(o.total||0);
+  c.qty    += sign*(o.qty||0);
+  if(o.commune){ c.communes[o.commune]=(c.communes[o.commune]||0)+sign; }
+  const ty=o.type||'standard'; c.types[ty]=(c.types[ty]||0)+sign;
+  Object.keys(c.communes).forEach(k=>{ if(c.communes[k]<=0) delete c.communes[k]; });
+  Object.keys(c.types).forEach(k=>{ if(c.types[k]<=0) delete c.types[k]; });
+  if(sign>0){
+    if(o.name) c.name=o.name;
+    if(sanitizeClient(o.phone)){ c.phone=o.phone; c.noPhone=false; }
+    const d=o.deliveredAt||new Date().toISOString();
+    if(!c.lastDate || d>c.lastDate) c.lastDate=d;
+  }
+  if(c.orders<=0) delete state.clients[key];
+}
+// Importe les commandes déjà livrées non encore comptées (1er lancement / restauration)
+function migrateBase(){
+  let changed=false;
+  state.orders.forEach(o=>{ if(o.done && !o.credited){ applyToBase(o,+1); o.credited=true; changed=true; } });
+  if(changed) saveState();
 }
 
 /* ---------------- Form state ---------------- */
@@ -443,14 +556,21 @@ function computeTotal(){
   return PRICE[curType]*qty;
 }
 
-/* ---- Nom auto « Cliente N » ---- */
-function nextClientName(){
+/* ---- Nom auto « Cliente N » par zone ---- */
+function nextClientName(zone){
   let max=0;
-  state.orders.forEach(o=>{
+  state.orders.filter(o=>o.zone===zone).forEach(o=>{
     const m=(o.name||"").match(/^cliente?\s+(\d+)$/i);
     if(m){ const n=parseInt(m[1],10); if(n>max)max=n; }
   });
   return "Cliente "+(max+1);
+}
+/* ---- Détection d'un numéro déjà utilisé sur une autre commande ---- */
+function phoneConflict(value, ignoreId){
+  if(!value) return null;
+  const key=sanitizeClient(value);
+  if(!key) return null;
+  return state.orders.find(o=> o.id!==ignoreId && o.phone && sanitizeClient(o.phone)===key) || null;
 }
 
 /* ---- Téléphone : mode + composition + validation ---- */
@@ -510,7 +630,17 @@ function refreshForm(){
   // téléphone (commun aux deux modes)
   const ph=phoneStatus();
   const phHint=document.getElementById('phoneHint');
-  phHint.textContent=ph.hint;
+  if(!ph.valid){
+    phHint.textContent=ph.hint; phHint.style.color="var(--danger)";
+  }else{
+    const conflict = phoneConflict(ph.value);
+    if(conflict){
+      phHint.textContent="⚠ Numéro déjà utilisé par "+conflict.code+" — "+conflict.name;
+      phHint.style.color="var(--a-deep)";
+    }else{
+      phHint.textContent=""; phHint.style.color="var(--danger)";
+    }
+  }
 
   if(curMode==="yesterday"){
     const parsed=parseCode(document.getElementById('f-code').value);
@@ -571,13 +701,18 @@ function addOrder(){
     zone=getZoneFromForm(); if(!zone)return;
     code=nextCodeFor(zone);
   }
+  const phoneValue=phoneStatus().value;
+  const conflict=phoneConflict(phoneValue);
+  if(conflict){
+    if(!confirm("⚠ Le numéro "+phoneValue+" est déjà enregistré pour "+conflict.code+" — "+conflict.name+" ("+conflict.commune+").\n\nUn même numéro ne devrait pas servir deux adresses différentes. Enregistrer quand même ?")) return;
+  }
   const o={
     id:Date.now()+"_"+Math.random().toString(36).slice(2,7),
     code, zone,
-    name:document.getElementById('f-name').value.trim() || nextClientName(),
+    name:document.getElementById('f-name').value.trim() || nextClientName(zone),
     commune:document.getElementById('f-commune').value,
     address:document.getElementById('f-address').value.trim(),
-    phone:phoneStatus().value,
+    phone:phoneValue,
     qty:Math.max(1,parseInt(document.getElementById('f-qty').value||"1",10)),
     type:curType,
     total:computeTotal(),
@@ -609,19 +744,10 @@ function setType(t){
 }
 
 /* ---------------- Rendu des zones ---------------- */
-function render(){
-  const wrap=document.getElementById('zones'); wrap.innerHTML="";
-  let counts={A:0,B:0,C:0};
-  Object.keys(ZONES).forEach(z=>{
-    const orders=state.orders.filter(o=>o.zone===z);
-    counts[z]=orders.length;
-    const sum=orders.reduce((s,o)=>s+(o.total||0),0);
-    const pending=orders.filter(o=>!o.done).length;
-    const cls={A:"za",B:"zb",C:"zc"}[z];
-
-    const sec=document.createElement('section');
-    sec.className="zone "+cls;
-    sec.innerHTML=`
+function zoneCardHTML(z){
+  const orders=state.orders.filter(o=>o.zone===z);
+  const sum=orders.reduce((s,o)=>s+(o.total||0),0);
+  return `
       <div class="zone-top">
         <div class="row1">
           <div class="zone-letter">${z}<small>${ZONES[z].name}</small></div>
@@ -645,13 +771,23 @@ function render(){
           Imprimer
         </button>
       </div>`;
+}
+function render(){
+  const wrap=document.getElementById('zones'); wrap.innerHTML="";
+  let counts={A:0,B:0,C:0};
+  Object.keys(ZONES).forEach(z=>{
+    counts[z]=state.orders.filter(o=>o.zone===z).length;
+    const cls={A:"za",B:"zb",C:"zc"}[z];
+    const sec=document.createElement('section');
+    sec.className="zone "+cls;
+    sec.innerHTML=zoneCardHTML(z);
     wrap.appendChild(sec);
   });
   document.getElementById('rA').textContent=counts.A;
   document.getElementById('rB').textContent=counts.B;
   document.getElementById('rC').textContent=counts.C;
   bindZoneEvents();
-  document.getElementById('nextCode'); refreshForm();
+  refreshForm();
 }
 
 function orderHTML(o){
@@ -941,10 +1077,20 @@ function renderPasteSummary(r){
 /* ---------------- Events ---------------- */
 function bindZoneEvents(){
   document.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{
-    state.orders=state.orders.filter(o=>o.id!==b.dataset.del); saveState(); render(); showToast("Commande supprimée");
+    const o=state.orders.find(o=>o.id===b.dataset.del);
+    if(o && o.credited) applyToBase(o,-1);
+    state.orders=state.orders.filter(o=>o.id!==b.dataset.del);
+    saveState(); render(); updateClientsCount(); refreshOpenZone(); showToast("Commande supprimée");
   });
   document.querySelectorAll('[data-check]').forEach(b=>b.onclick=()=>{
-    const o=state.orders.find(o=>o.id===b.dataset.check); if(o){o.done=!o.done; saveState(); render();}
+    const o=state.orders.find(o=>o.id===b.dataset.check);
+    if(o){
+      o.done=!o.done;
+      if(o.done){ o.deliveredAt=new Date().toISOString(); if(!o.credited){ applyToBase(o,+1); o.credited=true; } }
+      else { if(o.credited){ applyToBase(o,-1); o.credited=false; } }
+      saveState(); render(); updateClientsCount(); refreshOpenZone();
+      if(document.getElementById('page-cli').style.display!=="none") renderClients();
+    }
   });
   document.querySelectorAll('[data-wa]').forEach(b=>b.onclick=()=>sendWhatsApp(b.dataset.wa));
   document.querySelectorAll('[data-copy]').forEach(b=>b.onclick=()=>copyMessage(b.dataset.copy));
@@ -967,8 +1113,8 @@ function downloadFile(name,content,type){
   setTimeout(()=>{URL.revokeObjectURL(url); a.remove();},120);
 }
 function exportBackup(){
-  if(state.orders.length===0){ showToast("Rien à sauvegarder"); return; }
-  const data=JSON.stringify({app:"BK Pochette Congo",version:1,exportedAt:new Date().toISOString(),orders:state.orders},null,2);
+  if(state.orders.length===0 && Object.keys(state.clients).length===0){ showToast("Rien à sauvegarder"); return; }
+  const data=JSON.stringify({app:"BK Pochette Congo",version:2,exportedAt:new Date().toISOString(),orders:state.orders,clients:state.clients},null,2);
   downloadFile("bk-sauvegarde-"+dateStamp()+".json",data,"application/json");
   showToast("Sauvegarde téléchargée");
 }
@@ -990,19 +1136,163 @@ function importBackup(file){
       const p=JSON.parse(r.result);
       const orders=Array.isArray(p)?p:(p.orders||(p.state&&p.state.orders));
       if(!Array.isArray(orders)) throw 0;
-      if(confirm("Remplacer les commandes actuelles par la sauvegarde ("+orders.length+" commande(s)) ?")){
-        state.orders=orders; saveState(); render(); showToast("Sauvegarde restaurée");
+      const clients=(p&&p.clients)|| (p&&p.state&&p.state.clients) || null;
+      if(confirm("Remplacer les données actuelles par la sauvegarde ("+orders.length+" commande(s)"+(clients?", "+Object.keys(clients).length+" client(s)":"")+") ?")){
+        state.orders=orders;
+        state.clients = clients ? clients : {};
+        if(!clients) migrateBase();   // ancienne sauvegarde sans base : on reconstruit depuis les livrées
+        saveState(); render(); updateClientsCount();
+        if(document.getElementById('page-cli').style.display!=="none") renderClients();
+        showToast("Sauvegarde restaurée");
       }
     }catch(e){ showToast("Fichier de sauvegarde invalide"); }
   };
   r.readAsText(file);
 }
 
+/* ---------------- Onglets & base clients ---------------- */
+let curZonePage=null;
+function setTab(t){
+  curZonePage=null;
+  document.getElementById('page-zone').style.display='none';
+  document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('sel',b.dataset.tab===t));
+  document.getElementById('page-liv').style.display = t==='liv'?'':'none';
+  document.getElementById('page-cli').style.display = t==='cli'?'':'none';
+  if(t==='cli') renderClients();
+}
+function openZonePage(z){
+  curZonePage=z;
+  document.getElementById('page-liv').style.display='none';
+  document.getElementById('page-cli').style.display='none';
+  document.getElementById('page-zone').style.display='';
+  window.scrollTo(0,0);
+  renderZonePage(z);
+}
+function renderZonePage(z){
+  const orders=state.orders.filter(o=>o.zone===z);
+  const pending=orders.filter(o=>!o.done).length;
+  const delivered=orders.filter(o=>o.done).length;
+  const cls={A:"za",B:"zb",C:"zc"}[z];
+  const page=document.getElementById('page-zone');
+  page.innerHTML=`
+    <button class="back-btn" id="zoneBack">‹ Retour à toutes les zones</button>
+    <div class="zone-focus-intro">
+      <b>Validation avec le livreur — ${ZONES[z].label} · ${ZONES[z].name}.</b>
+      Coche ✓ chaque commande réellement livrée. Ensuite, « Reporter les non livrées »
+      garde les non cochées (avec leur étiquette) pour la prochaine liste et retire les livrées.
+    </div>
+    <section class="zone ${cls}">${zoneCardHTML(z)}</section>
+    <div class="report-bar">
+      <button class="report-btn" id="reportBtn" ${orders.length?'':'disabled'}>
+        ↩ Reporter les ${pending} non livrée${pending>1?'s':''} vers la prochaine liste
+      </button>
+      <div class="report-note">${delivered} livrée${delivered>1?'s':''} ${delivered>1?'seront retirées':'sera retirée'} (déjà comptée${delivered>1?'s':''} dans la base clients). Les non livrées gardent leur code.</div>
+    </div>`;
+  document.getElementById('zoneBack').onclick=()=>setTab('liv');
+  document.getElementById('reportBtn').onclick=()=>reportZone(z);
+  bindZoneEvents();   // (re)branche ✓ / supprimer / WhatsApp / Copier / Imprimer de la carte
+}
+function reportZone(z){
+  const orders=state.orders.filter(o=>o.zone===z);
+  if(orders.length===0){ showToast("Aucune livraison dans cette zone"); return; }
+  const delivered=orders.filter(o=>o.done).length;
+  const pending=orders.filter(o=>!o.done).length;
+  if(pending===0 && delivered===0){ return; }
+  if(confirm(`${ZONES[z].label} · ${ZONES[z].name} :\n• ${delivered} livrée(s) seront retirées\n• ${pending} non livrée(s) gardées pour la prochaine liste (avec leur étiquette)\n\nContinuer ?`)){
+    state.orders = state.orders.filter(o=> !(o.zone===z && o.done));
+    state.orders.filter(o=>o.zone===z).forEach(o=>o.carried=true);
+    saveState(); render(); renderZonePage(z);
+    showToast(`${ZONES[z].label} : ${pending} non livrée(s) reportée(s)`);
+  }
+}
+function refreshOpenZone(){ if(curZonePage) renderZonePage(curZonePage); }
+function updateClientsCount(){
+  document.getElementById('tabCliCount').textContent = Object.keys(state.clients).length;
+}
+function fillCliCommunes(){
+  const sel=document.getElementById('cliCommune');
+  Object.keys(ZONES).forEach(z=>{
+    ZONES[z].communes.slice().sort((a,b)=>a.localeCompare(b,'fr')).forEach(c=>{
+      const o=document.createElement('option'); o.value=c; o.textContent=c; sel.appendChild(o);
+    });
+  });
+}
+function clientList(){
+  const q=norm(document.getElementById('cliSearch').value);
+  const fc=document.getElementById('cliCommune').value;
+  const ft=document.getElementById('cliType').value;
+  const sort=document.getElementById('cliSort').value;
+  let arr=Object.values(state.clients);
+  if(q) arr=arr.filter(c=> norm(c.name).includes(q) || sanitizeClient(c.phone).includes(q.replace(/\D/g,"")) );
+  if(fc) arr=arr.filter(c=> c.communes[fc]>0 );
+  if(ft) arr=arr.filter(c=> c.types[ft]>0 );
+  arr.sort((a,b)=>{
+    if(sort==='total') return b.total-a.total;
+    if(sort==='recent') return (b.lastDate||'').localeCompare(a.lastDate||'');
+    if(sort==='name') return (a.name||'').localeCompare(b.name||'','fr');
+    return b.orders-a.orders; // défaut: nombre de commandes
+  });
+  return arr;
+}
+function renderClients(){
+  const all=Object.values(state.clients);
+  document.getElementById('cliTotal').textContent=all.length;
+  document.getElementById('cliLoyal').textContent=all.filter(c=>c.orders>=2).length;
+  document.getElementById('cliRevenue').textContent=fmt(all.reduce((s,c)=>s+(c.total||0),0));
+  updateClientsCount();
+
+  const list=clientList();
+  const box=document.getElementById('cliList');
+  if(all.length===0){
+    box.innerHTML=`<div class="cl-empty"><b>Base vide pour l'instant</b>Coche une commande comme « livrée » et le client apparaîtra ici.</div>`;
+    return;
+  }
+  if(list.length===0){ box.innerHTML=`<div class="cl-empty">Aucun client ne correspond à ce filtre.</div>`; return; }
+
+  box.innerHTML=list.map(c=>{
+    const communes=Object.keys(c.communes).join(", ");
+    const types=[]; if(c.types.premium)types.push(`<span class="tag">${c.types.premium} Premium</span>`);
+    if(c.types.standard)types.push(`<span class="tag">${c.types.standard} Standard</span>`);
+    if(c.types.special)types.push(`<span class="tag">${c.types.special} Spécial</span>`);
+    const wc=sanitizeClient(c.phone);
+    const last=c.lastDate?new Date(c.lastDate).toLocaleDateString('fr-FR'):"—";
+    const loyal=c.orders>=2?'loyal':'';
+    return `<div class="cli-card">
+      <div class="cl-main">
+        <div class="cl-name">${esc(c.name||'(sans nom)')} <span class="cl-badge ${loyal}">${c.orders} cmd</span></div>
+        <div class="cl-meta">${wc?('📞 wa.me/'+wc):'<i>sans numéro</i>'}${communes?' <span class="sep">·</span> 📍 '+esc(communes):''} <span class="sep">·</span> dernier : ${last}</div>
+        <div class="cl-types">${types.join("")||''}</div>
+      </div>
+      <div class="cl-side">
+        <div class="cl-total">${fmt(c.total)}</div>
+        ${wc?`<a class="cl-wa" href="https://wa.me/${wc}" target="_blank" rel="noopener"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 00-8.5 15.3L2 22l4.8-1.5A10 10 0 1012 2zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.5-3.9-4.7-4.1-.1-.2-1-1.4-1-2.6 0-1.2.6-1.8.9-2.1.2-.2.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.3 0 .5l-.4.6c-.2.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.4 2.4 1.5.2.1.4.1.5-.1l.7-.9c.2-.2.3-.2.6-.1l1.9.9c.3.1.5.2.5.3.1.2.1.6 0 1z"/></svg>WhatsApp</a>`:''}
+      </div>
+    </div>`;
+  }).join("");
+}
+function exportClientsCSV(){
+  const all=Object.values(state.clients);
+  if(all.length===0){ showToast("Base clients vide"); return; }
+  const head=["Nom","Telephone","Communes","Premium","Standard","Special","Commandes","Total","DerniereCommande"];
+  const rows=[head];
+  all.sort((a,b)=>b.orders-a.orders).forEach(c=>{
+    rows.push([c.name, sanitizeClient(c.phone)?("+"+sanitizeClient(c.phone)):"", Object.keys(c.communes).join(" / "),
+      c.types.premium||0, c.types.standard||0, c.types.special||0, c.orders, c.total,
+      c.lastDate?new Date(c.lastDate).toLocaleDateString('fr-FR'):""]);
+  });
+  const csv="\uFEFF"+rows.map(r=>r.map(csvCell).join(";")).join("\r\n");
+  downloadFile("bk-clients-"+dateStamp()+".csv",csv,"text/csv;charset=utf-8");
+  showToast("Base clients exportée");
+}
+
 /* ---------------- Init ---------------- */
 function init(){
   fillCommunes();
+  fillCliCommunes();
   loadState();
+  migrateBase();          // importe les commandes déjà livrées dans la base
   updateStoreNote();
+  updateClientsCount();
   render();
 
   document.getElementById('f-commune').addEventListener('change',refreshForm);
@@ -1070,6 +1360,19 @@ function init(){
 
   setPhoneMode("cd");
   setMode("new");
+
+  // Onglets & base clients
+  document.querySelector('.tabs').addEventListener('click',e=>{
+    const b=e.target.closest('.tab'); if(b)setTab(b.dataset.tab);
+  });
+  // Pastilles de zone cliquables → page de la zone
+  document.querySelector('.ribbon').addEventListener('click',e=>{
+    const b=e.target.closest('.pill'); if(b)openZonePage(b.dataset.zone);
+  });
+  ['cliSearch','cliCommune','cliType','cliSort'].forEach(id=>
+    document.getElementById(id).addEventListener('input',renderClients));
+  document.getElementById('cliExportBtn').addEventListener('click',exportClientsCSV);
+
   refreshForm();
 }
 init();
