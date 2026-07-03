@@ -96,7 +96,10 @@
   #cliSearch:focus{outline:none;border-color:var(--ink);background:#fff}
   .cli-row{display:flex;gap:8px;margin-top:9px}
   .cli-row select{flex:1;min-width:0;appearance:none;background:#F8F9FB;border:1px solid var(--line);border-radius:10px;padding:10px 26px 10px 10px;font-size:12.5px;color:var(--ink);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238A909E' stroke-width='1.6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 9px center}
-  #cliExportBtn{width:100%;margin-top:12px;text-align:center}
+  #cliExportBtn{text-align:center}
+  .cli-actions{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+  .cli-actions .reset-btn{width:100%;text-align:center}
+  .cli-imp-hint{font-size:11.5px;color:var(--ink-faint);line-height:1.5;margin-top:8px}
 
   .cli-list{display:flex;flex-direction:column;gap:10px;margin-top:16px}
   .cli-card{background:var(--paper);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);padding:13px 14px;display:flex;gap:12px;align-items:flex-start}
@@ -497,7 +500,13 @@
         <select id="cliType"><option value="">Tous types</option><option value="premium">Premium</option><option value="standard">Standard</option></select>
         <select id="cliSort"><option value="orders">Plus de commandes</option><option value="total">Plus dépensé</option><option value="recent">Plus récents</option><option value="name">Nom (A→Z)</option></select>
       </div>
-      <button class="reset-btn save" id="cliExportBtn">Exporter les clients (Excel/CSV)</button>
+      <div class="cli-actions">
+        <button class="reset-btn save" id="cliExpDataBtn">⬆ Exporter la base clients (échange entre téléphones)</button>
+        <button class="reset-btn" id="cliImpDataBtn">⬇ Importer une base clients</button>
+        <button class="reset-btn" id="cliExportBtn">Excel (CSV)</button>
+        <input type="file" id="cliImportInput" accept="application/json,.json" style="display:none">
+      </div>
+      <div class="cli-imp-hint">L'import fusionne sans doublons : une même cliente livrée à la même date n'est jamais comptée deux fois. Accepte aussi les fichiers de sauvegarde complète (bk-sauvegarde-…) — seuls les clients en sont extraits, tes commandes en cours ne sont pas touchées.</div>
     </section>
     <div id="cliList" class="cli-list"></div>
   </div>
@@ -631,12 +640,31 @@ function applyToBase(o, sign){
   let c=state.clients[key];
   if(!c){
     if(sign<0) return;
-    c={key, phone:o.phone||"", name:o.name||"", communes:{}, types:{}, orders:0, total:0, qty:0, lastDate:null, noPhone:!sanitizeClient(o.phone)};
+    c={key, phone:o.phone||"", name:o.name||"", communes:{}, types:{}, orders:0, total:0, qty:0, lastDate:null, noPhone:!sanitizeClient(o.phone), days:{}, base:{n:0,t:0,q:0}};
     state.clients[key]=c;
   }
   c.orders += sign;
   c.total  += sign*(o.total||0);
   c.qty    += sign*(o.qty||0);
+  // détail par jour de livraison → permet la fusion entre téléphones sans doublons
+  if(!c.days) c.days={};
+  if(!c.base) c.base={n:0,t:0,q:0};
+  const dISO=(o.deliveredAt||new Date().toISOString()).slice(0,10);
+  if(sign>0){
+    const dd=c.days[dISO]||(c.days[dISO]={n:0,t:0,q:0});
+    dd.n++; dd.t=Math.round((dd.t+(o.total||0))*100)/100; dd.q+=o.qty||0;
+  }else{
+    const dd=c.days[dISO];
+    if(dd){
+      dd.n--; dd.t=Math.round((dd.t-(o.total||0))*100)/100; dd.q-=o.qty||0;
+      if(dd.n<=0) delete c.days[dISO];
+    }else{
+      // livraison comptée avant la mise à jour (pas de détail par jour) → on retire de l'historique global
+      c.base.n=Math.max(0,c.base.n-1);
+      c.base.t=Math.max(0,Math.round((c.base.t-(o.total||0))*100)/100);
+      c.base.q=Math.max(0,c.base.q-(o.qty||0));
+    }
+  }
   if(o.commune){ c.communes[o.commune]=(c.communes[o.commune]||0)+sign; }
   const ty=o.type||'standard'; c.types[ty]=(c.types[ty]||0)+sign;
   Object.keys(c.communes).forEach(k=>{ if(c.communes[k]<=0) delete c.communes[k]; });
@@ -648,6 +676,26 @@ function applyToBase(o, sign){
     if(!c.lastDate || d>c.lastDate) c.lastDate=d;
   }
   if(c.orders<=0) delete state.clients[key];
+}
+// Migration : les fiches créées avant cette mise à jour n'ont pas de détail par
+// jour. Leur historique passe dans « base » (bloc hérité) et le détail commence
+// à partir de maintenant. Rien n'est perdu.
+function migrateClientDays(){
+  let changed=false;
+  Object.values(state.clients).forEach(c=>{
+    if(!c.days || !c.base){
+      c.days=c.days||{};
+      c.base=c.base||{n:c.orders||0, t:c.total||0, q:c.qty||0};
+      changed=true;
+    }
+  });
+  if(changed) saveState();
+}
+// Recalcule les totaux affichés d'une fiche = bloc hérité + somme du détail par jour
+function recalcClient(c){
+  let n=c.base?c.base.n:0, t=c.base?c.base.t:0, q=c.base?c.base.q:0;
+  Object.values(c.days||{}).forEach(d=>{ n+=d.n||0; t+=d.t||0; q+=d.q||0; });
+  c.orders=n; c.total=Math.round(t*100)/100; c.qty=q;
 }
 /* ---------------- Journal statistique (par jour / par zone) ---------------- */
 // Compté au moment où une commande est marquée livrée. L'historique survit
@@ -1533,25 +1581,95 @@ function exportCSV(){
   downloadFile("bk-commandes-"+dateStamp()+".csv",csv,"text/csv;charset=utf-8");
   showToast("Fichier Excel (CSV) téléchargé");
 }
-// Fusionne la base clients d'une sauvegarde dans la base actuelle
-// SANS jamais supprimer ni écraser un client existant.
-function mergeClients(incoming){
-  if(!incoming) return;
-  Object.keys(incoming).forEach(k=>{
-    const inc=incoming[k], cur=state.clients[k];
-    if(!inc) return;
-    if(!cur){ state.clients[k]=inc; return; }   // client inconnu → ajouté
-    // client déjà présent → on garde la fiche la plus complète (plus de commandes)
-    if((inc.orders||0) > (cur.orders||0)){
-      const last=(cur.lastDate && (!inc.lastDate || cur.lastDate>inc.lastDate)) ? cur.lastDate : inc.lastDate;
-      state.clients[k]=Object.assign({}, inc, {lastDate:last});
-    }else{
-      if(inc.lastDate && (!cur.lastDate || inc.lastDate>cur.lastDate)) cur.lastDate=inc.lastDate;
-      if(!cur.phone && inc.phone){ cur.phone=inc.phone; cur.noPhone=false; }
-      if(!cur.name && inc.name) cur.name=inc.name;
-    }
-  });
+// Fusionne une base clients importée dans la base actuelle SANS jamais
+// supprimer un client existant et SANS doublon : la même cliente livrée
+// à la même date n'est comptée qu'une seule fois, même si le fichier
+// est importé plusieurs fois. Retourne un rapport {added, updated, dupes}.
+function normalizeClientRec(c){
+  if(!c.days) c.days={};
+  if(!c.base) c.base={n:c.orders||0, t:c.total||0, q:c.qty||0};
+  return c;
 }
+function mergeClients(incoming){
+  const report={added:0, updated:0, dupes:0};
+  if(!incoming) return report;
+  Object.keys(incoming).forEach(k=>{
+    const inc=incoming[k];
+    if(!inc) return;
+    normalizeClientRec(inc);
+    const cur=state.clients[k];
+    if(!cur){ state.clients[k]=inc; recalcClient(inc); report.added++; return; }
+    normalizeClientRec(cur);
+    let touched=false;
+    // 1) Détail par jour : date inconnue → ajoutée ; même date → on garde la
+    //    version la plus complète, l'excédent est un doublon ignoré.
+    Object.keys(inc.days).forEach(d=>{
+      const di=inc.days[d], dc=cur.days[d];
+      if(!dc){ cur.days[d]=di; touched=true; }
+      else{
+        report.dupes += Math.min(dc.n||0, di.n||0);
+        if((di.n||0)>(dc.n||0)){ cur.days[d]=di; touched=true; }
+      }
+    });
+    // 2) Historique hérité (fiches d'avant la mise à jour) : on garde le plus grand, jamais la somme
+    if((inc.base.n||0)>(cur.base.n||0)){ report.dupes+=cur.base.n||0; cur.base=inc.base; touched=true; }
+    else if(inc.base.n){ report.dupes+=inc.base.n; }
+    // 3) Compléter la fiche sans rien écraser d'utile
+    if(inc.lastDate && (!cur.lastDate || inc.lastDate>cur.lastDate)){ cur.lastDate=inc.lastDate; touched=true; }
+    if(!sanitizeClient(cur.phone) && sanitizeClient(inc.phone)){ cur.phone=inc.phone; cur.noPhone=false; touched=true; }
+    if(!cur.name && inc.name){ cur.name=inc.name; touched=true; }
+    Object.keys(inc.communes||{}).forEach(cm=>{ if(!cur.communes[cm]){ cur.communes[cm]=inc.communes[cm]; touched=true; } });
+    Object.keys(inc.types||{}).forEach(ty=>{ if(!cur.types[ty]){ cur.types[ty]=inc.types[ty]; touched=true; } });
+    recalcClient(cur);
+    if(touched) report.updated++;
+  });
+  return report;
+}
+// Reconstruit une base clients (avec détail par jour) à partir des commandes
+// livrées d'une ancienne sauvegarde qui ne contenait pas encore de base.
+function buildClientsFromOrders(orders){
+  const saved=state.clients;
+  state.clients={};
+  (orders||[]).forEach(o=>{ if(o.done) applyToBase(o,+1); });
+  const built=state.clients;
+  state.clients=saved;
+  Object.values(built).forEach(c=>{ normalizeClientRec(c); recalcClient(c); });
+  return built;
+}
+/* ---------------- Échange de la base clients entre téléphones ---------------- */
+function exportClientsData(){
+  const n=Object.keys(state.clients).length;
+  if(n===0){ showToast("La base clients est vide"); return; }
+  const data=JSON.stringify({app:"BK Pochette Congo",kind:"clients",version:1,exportedAt:new Date().toISOString(),clients:state.clients},null,2);
+  downloadFile("bk-clients-"+dateStamp()+".json",data,"application/json");
+  showToast("⬆ Base clients exportée ("+n+" client"+(n>1?"s":"")+") — envoie ce fichier à l'autre téléphone");
+}
+function importClientsFile(file){
+  const r=new FileReader();
+  r.onload=()=>{
+    try{
+      const p=JSON.parse(r.result);
+      // 1) fichier d'échange clients  2) sauvegarde complète → clients seulement
+      // 3) très ancienne sauvegarde sans base → reconstruite depuis ses livrées
+      let src=null, origin="";
+      if(p && p.kind==="clients" && p.clients){ src=p.clients; origin="fichier base clients"; }
+      else if(p && p.clients && Object.keys(p.clients).length){ src=p.clients; origin="sauvegarde complète (clients extraits)"; }
+      else{
+        const orders=Array.isArray(p)?p:(p&&(p.orders||(p.state&&p.state.orders)));
+        if(Array.isArray(orders)){ src=buildClientsFromOrders(orders); origin="ancienne sauvegarde (clients reconstruits depuis les livrées)"; }
+      }
+      if(!src || Object.keys(src).length===0){ showToast("Aucun client trouvé dans ce fichier"); return; }
+      const n=Object.keys(src).length;
+      if(!confirm("Fusionner "+n+" client(s) — "+origin+" — dans la base de CE téléphone ?\n\n✔ Aucun doublon : une même cliente à la même date n'est comptée qu'une fois.\n✔ Tes commandes en cours et reportées 📅 ne sont pas touchées.\n✔ Aucune fiche existante n'est effacée.")) return;
+      const rep=mergeClients(src);
+      saveState(); updateClientsCount();
+      if(document.getElementById('page-cli').style.display!=="none") renderClients();
+      showToast("✓ Fusion : "+rep.added+" ajoutée(s) · "+rep.updated+" complétée(s) · "+rep.dupes+" doublon(s) ignoré(s)");
+    }catch(e){ showToast("Fichier invalide — utilise un fichier bk-clients ou bk-sauvegarde"); }
+  };
+  r.readAsText(file);
+}
+
 function importBackup(file){
   const r=new FileReader();
   r.onload=()=>{
@@ -1562,13 +1680,13 @@ function importBackup(file){
       const clients=(p&&p.clients)|| (p&&p.state&&p.state.clients) || null;
       if(confirm("Remplacer les commandes actuelles par la sauvegarde ("+orders.length+" commande(s)"+(clients?", "+Object.keys(clients).length+" client(s)":"")+") ?\n\nℹ La base clients livrés sera CONSERVÉE et complétée — jamais effacée.")){
         state.orders=orders;
-        mergeClients(clients);        // la base clients existante n'est JAMAIS écrasée
+        const rep=mergeClients(clients); // la base clients existante n'est JAMAIS écrasée
         mergeStats(p&&p.stats);       // l'historique statistique est fusionné, jamais perdu
         migrateBase();                // crédite les livrées pas encore comptées
         wakePostponed();              // les reportées dont la date est passée reviennent
         saveState(); render(); updateClientsCount();
         if(document.getElementById('page-cli').style.display!=="none") renderClients();
-        showToast("Sauvegarde restaurée");
+        showToast("Sauvegarde restaurée · clients : +"+rep.added+" · "+rep.dupes+" doublon(s) ignoré(s)");
       }
     }catch(e){ showToast("Fichier de sauvegarde invalide"); }
   };
@@ -1792,6 +1910,7 @@ function init(){
   fillCommunes();
   fillCliCommunes();
   loadState();
+  migrateClientDays();    // ajoute le détail par jour aux anciennes fiches clients
   migrateBase();          // importe les commandes déjà livrées dans la base
   wakePostponed();        // fait revenir les reportées dont le jour est arrivé
   updateStoreNote();
@@ -1903,6 +2022,11 @@ function init(){
   ['cliSearch','cliCommune','cliType','cliSort'].forEach(id=>
     document.getElementById(id).addEventListener('input',renderClients));
   document.getElementById('cliExportBtn').addEventListener('click',exportClientsCSV);
+  document.getElementById('cliExpDataBtn').addEventListener('click',exportClientsData);
+  document.getElementById('cliImpDataBtn').addEventListener('click',()=>document.getElementById('cliImportInput').click());
+  document.getElementById('cliImportInput').addEventListener('change',e=>{
+    const f=e.target.files[0]; if(f) importClientsFile(f); e.target.value="";
+  });
 
   refreshForm();
 }
