@@ -229,6 +229,7 @@
   .icon-btn{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;border:1px solid var(--line);background:#fff;color:var(--ink-soft);transition:.12s}
   .icon-btn:active{transform:scale(.9)}
   .icon-btn.del:hover{border-color:var(--danger);color:var(--danger)}
+  .icon-btn.move:hover{border-color:var(--b);color:var(--b-deep);background:var(--b-tint)}
   .icon-btn.check.on{background:var(--ok);border-color:var(--ok);color:#fff}
 
   .zone-foot{display:flex;flex-wrap:wrap;gap:9px;padding:11px 12px;border-top:1px solid var(--line);background:#FAFBFC}
@@ -255,6 +256,66 @@
   /* ---------- Toast ---------- */
   .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:12px 18px;border-radius:11px;font-size:13.5px;font-weight:500;z-index:60;opacity:0;pointer-events:none;transition:.25s;box-shadow:0 10px 30px rgba(0,0,0,.25);max-width:88%;text-align:center}
   .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+  /* ---------- Modales (édition / statistiques) ---------- */
+  .modal-ov{position:fixed;inset:0;background:rgba(20,22,27,.45);z-index:50;display:none;align-items:flex-end;justify-content:center;padding:0}
+  .modal-ov.open{display:flex}
+  .modal{background:var(--paper);border-radius:18px 18px 0 0;width:100%;max-width:560px;max-height:88vh;overflow-y:auto;padding:20px 18px calc(20px + env(safe-area-inset-bottom,0px));box-shadow:0 -10px 40px rgba(0,0,0,.2)}
+  @media(min-width:600px){.modal-ov{align-items:center;padding:20px}.modal{border-radius:18px}}
+  .modal h3{font-family:var(--font-d);font-size:17px;display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+  .modal h3 .m-code{background:var(--ink);color:#fff;border-radius:8px;padding:3px 10px;font-size:14px}
+  .m-close{width:32px;height:32px;border-radius:9px;border:1px solid var(--line);color:var(--ink-soft);font-size:16px;display:flex;align-items:center;justify-content:center}
+  .m-field{margin-bottom:11px}
+  .m-field label{display:block;font-size:11.5px;font-weight:600;color:var(--ink-faint);text-transform:uppercase;letter-spacing:.4px;margin-bottom:5px}
+  .m-field input,.m-field select{width:100%;background:#F8F9FB;border:1px solid var(--line);border-radius:10px;padding:11px 12px;font-size:14.5px;color:var(--ink)}
+  .m-field input:focus,.m-field select:focus{outline:none;border-color:var(--ink);background:#fff}
+  .m-row{display:flex;gap:10px}
+  .m-row .m-field{flex:1;min-width:0}
+  .m-hint{font-size:11.5px;color:var(--ink-faint);margin-top:4px;line-height:1.4}
+  .m-total{display:flex;justify-content:space-between;align-items:center;background:#F6F7F9;border:1px solid var(--line);border-radius:10px;padding:11px 13px;font-size:13.5px;color:var(--ink-soft);margin:4px 0 12px}
+  .m-total b{font-family:var(--font-d);font-size:17px;color:var(--ink)}
+  .m-save{width:100%;background:var(--ink);color:#fff;font-family:var(--font-d);font-weight:600;font-size:15px;padding:14px;border-radius:11px}
+  .m-save:active{transform:scale(.985)}
+  .icon-btn.edit:hover{border-color:var(--a);color:var(--a-deep);background:var(--a-tint)}
+
+  /* ---------- Rappel de sauvegarde ---------- */
+  .backup-nag{display:none;background:#FFF6E4;border:1px solid #F0D9A8;border-radius:12px;padding:12px 14px;margin-bottom:12px;font-size:13px;color:#7A5A12;line-height:1.5}
+  .backup-nag.show{display:block}
+  .backup-nag b{display:block;margin-bottom:2px}
+  .backup-nag button{margin-top:8px;background:var(--a);color:#fff;font-weight:600;font-size:13px;padding:9px 14px;border-radius:9px}
+
+  /* ---------- Livraisons reportées ---------- */
+  .postponed-card{padding:16px;margin-bottom:16px;border:1.5px dashed var(--a);background:#FFFDF8}
+  .pp-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+  .pp-head h2{font-family:var(--font-d);font-size:16px}
+  .pp-badge{background:var(--a);color:#fff;font-family:var(--font-d);font-weight:700;font-size:12.5px;border-radius:999px;padding:3px 11px}
+  .pp-intro{font-size:12.5px;color:var(--ink-soft);line-height:1.5;margin-bottom:12px}
+  .pp-row{display:flex;gap:11px;align-items:flex-start;padding:12px 0;border-top:1px solid var(--line-soft)}
+  .pp-code{flex:0 0 auto;color:#fff;font-family:var(--font-d);font-weight:700;font-size:14px;border-radius:9px;padding:7px 10px;min-width:44px;text-align:center}
+  .pp-main{flex:1;min-width:0}
+  .pp-name{font-weight:600;font-size:14.5px}
+  .pp-meta{font-size:12.5px;color:var(--ink-soft);margin-top:1px}
+  .pp-date{font-size:13px;font-weight:600;color:var(--a-deep);margin-top:4px}
+  .pp-note{font-size:12.5px;color:var(--ink-soft);margin-top:3px;font-style:italic}
+  .icon-btn.pp:hover{border-color:var(--a);color:var(--a-deep);background:var(--a-tint)}
+  .icon-btn.back-now{background:var(--b-tint);border-color:var(--b);color:var(--b-deep)}
+  .tag.due{background:var(--b-tint);color:var(--b-deep);font-weight:700}
+
+  /* ---------- Statistiques ---------- */
+  .st-cards{display:flex;gap:10px;margin-bottom:14px}
+  .st-cards>div{flex:1;background:#F6F7F9;border:1px solid var(--line);border-radius:11px;padding:12px;text-align:center}
+  .st-cards b{display:block;font-family:var(--font-d);font-size:21px;line-height:1.15}
+  .st-cards span{font-size:11px;color:var(--ink-faint)}
+  .st-sec{font-size:11.5px;font-weight:700;color:var(--ink-faint);text-transform:uppercase;letter-spacing:.5px;margin:16px 0 8px}
+  .st-row{display:flex;align-items:center;gap:10px;padding:9px 2px;border-bottom:1px solid var(--line-soft);font-size:13.5px}
+  .st-row:last-child{border-bottom:none}
+  .st-row .st-lbl{flex:1;color:var(--ink)}
+  .st-row .st-n{color:var(--ink-soft);font-size:12.5px}
+  .st-row .st-t{font-family:var(--font-d);font-weight:600;min-width:64px;text-align:right}
+  .st-bar{height:7px;border-radius:99px;background:var(--line-soft);flex:1;overflow:hidden;position:relative}
+  .st-bar i{position:absolute;inset:0 auto 0 0;border-radius:99px}
+  .st-dot{width:10px;height:10px;border-radius:50%;flex:0 0 auto}
+  .st-empty{font-size:13px;color:var(--ink-faint);text-align:center;padding:14px 0}
 
   @media (max-width:520px){
     .grid{grid-template-columns:1fr}
@@ -392,11 +453,28 @@
   <!-- ====== Zones ====== -->
   <div class="zones" id="zones"></div>
 
+  <!-- ====== Livraisons reportées (toutes zones) ====== -->
+  <section class="card postponed-card" id="postponedCard" style="display:none">
+    <div class="pp-head">
+      <h2>📅 Livraisons reportées</h2>
+      <span class="pp-badge" id="ppCount">0</span>
+    </div>
+    <div class="pp-intro">Ces commandes attendent la date donnée par le client. Elles gardent leur étiquette (numéro réservé) et <b>reviennent automatiquement dans leur zone le jour prévu</b>, à l'ouverture de l'application. Elles n'apparaissent ni sur les feuilles des livreurs ni dans les messages WhatsApp.</div>
+    <div id="ppList"></div>
+  </section>
+
+  <div class="backup-nag" id="backupNag">
+    <b>⚠ Pense à sauvegarder tes données</b>
+    <span id="backupNagTxt">Aucune sauvegarde récente. Si le téléphone est perdu ou le navigateur nettoyé, tout disparaît.</span>
+    <button id="backupNagBtn">💾 Sauvegarder maintenant</button>
+  </div>
+
   <div class="daybar">
     <div class="store-note" id="storeNote"><span class="d"></span><span id="storeTxt">Enregistré sur cet appareil</span></div>
     <div class="daybar-actions">
       <button class="reset-btn save" id="backupBtn">💾 Sauvegarder</button>
       <button class="reset-btn" id="restoreBtn">↪ Restaurer</button>
+      <button class="reset-btn" id="statsBtn">📊 Statistiques</button>
       <button class="reset-btn" id="csvBtn">Excel (CSV)</button>
       <button class="reset-btn print-all" id="printAllBtn">Imprimer tout</button>
       <button class="reset-btn" id="newDayBtn">Nouvelle journée</button>
@@ -427,6 +505,76 @@
   <div id="page-zone" style="display:none"></div>
 </main>
 
+<!-- ====== Modale : modifier une commande ====== -->
+<div class="modal-ov" id="editOv">
+  <div class="modal">
+    <h3><span>Modifier <span class="m-code" id="e-code">A1</span></span><button class="m-close" id="editClose">✕</button></h3>
+    <div class="m-field">
+      <label>Nom du client</label>
+      <input type="text" id="e-name" autocomplete="off">
+    </div>
+    <div class="m-field">
+      <label>Commune (même zone)</label>
+      <select id="e-commune"></select>
+      <div class="m-hint">Pour envoyer la commande dans une autre zone, utilise le bouton ⇄ sur la commande.</div>
+    </div>
+    <div class="m-field">
+      <label>Adresse / avenue / référence</label>
+      <input type="text" id="e-address" autocomplete="off">
+    </div>
+    <div class="m-field">
+      <label>Téléphone (chiffres uniquement)</label>
+      <input type="tel" id="e-phone" inputmode="numeric" autocomplete="off">
+    </div>
+    <div class="m-row">
+      <div class="m-field">
+        <label>Quantité</label>
+        <input type="number" id="e-qty" min="1" inputmode="numeric">
+      </div>
+      <div class="m-field">
+        <label>Type</label>
+        <select id="e-type">
+          <option value="standard">Standard — 15$</option>
+          <option value="premium">Premium — 18$</option>
+          <option value="special">Spécial — montant libre</option>
+        </select>
+      </div>
+    </div>
+    <div class="m-field" id="e-special-wrap" style="display:none">
+      <label>Montant spécial ($)</label>
+      <input type="number" id="e-special" min="0" step="0.5" inputmode="decimal">
+    </div>
+    <div class="m-total"><span>Nouveau total</span><b id="e-total">—</b></div>
+    <button class="m-save" id="editSave">Enregistrer les modifications</button>
+  </div>
+</div>
+
+<!-- ====== Modale : reporter une livraison ====== -->
+<div class="modal-ov" id="postponeOv">
+  <div class="modal">
+    <h3><span>📅 Reporter <span class="m-code" id="pp-code">A1</span></span><button class="m-close" id="ppClose">✕</button></h3>
+    <div class="m-hint" id="pp-who" style="margin:-8px 0 12px"></div>
+    <div class="m-field">
+      <label>Date exacte donnée par le client</label>
+      <input type="date" id="pp-date">
+      <div class="m-hint">La commande reviendra automatiquement dans sa zone ce jour-là.</div>
+    </div>
+    <div class="m-field">
+      <label>Note (facultatif)</label>
+      <input type="text" id="pp-note" placeholder="Ex. client en voyage, appeler avant de passer" autocomplete="off">
+    </div>
+    <button class="m-save" id="ppSave">📅 Reporter la livraison</button>
+  </div>
+</div>
+
+<!-- ====== Modale : statistiques ====== -->
+<div class="modal-ov" id="statsOv">
+  <div class="modal">
+    <h3><span>📊 Statistiques</span><button class="m-close" id="statsClose">✕</button></h3>
+    <div id="statsBody"></div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
@@ -443,20 +591,21 @@ const ZONE_VAR = {A:"--a",B:"--b",C:"--c"};
 
 /* ---------------- État + stockage ---------------- */
 const STORE_KEY = "bkpc_state_v1";
-let state = { orders:[], clients:{} };
+const BACKUP_KEY = "bkpc_last_backup";
+let state = { orders:[], clients:{}, stats:{} };
 let memoryOnly = false;
 
 function loadState(){
   try{
     const raw = localStorage.getItem(STORE_KEY);
-    if(raw){ const p = JSON.parse(raw); state.orders = p.orders||[]; state.clients = p.clients||{}; }
+    if(raw){ const p = JSON.parse(raw); state.orders = p.orders||[]; state.clients = p.clients||{}; state.stats = p.stats||{}; }
   }catch(e){
     memoryOnly = true;
   }
 }
 function saveState(){
   try{
-    localStorage.setItem(STORE_KEY, JSON.stringify({orders:state.orders, clients:state.clients}));
+    localStorage.setItem(STORE_KEY, JSON.stringify({orders:state.orders, clients:state.clients, stats:state.stats}));
     if(memoryOnly){ memoryOnly=false; updateStoreNote(); }
   }catch(e){
     memoryOnly = true; updateStoreNote();
@@ -500,16 +649,73 @@ function applyToBase(o, sign){
   }
   if(c.orders<=0) delete state.clients[key];
 }
+/* ---------------- Journal statistique (par jour / par zone) ---------------- */
+// Compté au moment où une commande est marquée livrée. L'historique survit
+// à « Nouvelle journée » : les livrées retirées restent dans les statistiques.
+function statDate(o){ return (o.deliveredAt||new Date().toISOString()).slice(0,10); }
+function statAdd(o, sign){
+  if(!state.stats) state.stats={};
+  const d=statDate(o);
+  let day=state.stats[d];
+  if(!day){ if(sign<0) return; day=state.stats[d]={}; }
+  let z=day[o.zone];
+  if(!z){ if(sign<0) return; z=day[o.zone]={n:0,t:0,c:0}; }
+  z.n+=sign;
+  z.t=Math.round((z.t+sign*(o.total||0))*100)/100;
+  if(o.carried) z.c=Math.max(0,(z.c||0)+sign);
+  if(z.n<=0) delete day[o.zone];
+  if(Object.keys(day).length===0) delete state.stats[d];
+}
+// Fusionne l'historique d'une sauvegarde sans jamais perdre le local
+function mergeStats(incoming){
+  if(!incoming) return;
+  if(!state.stats) state.stats={};
+  const daySum=x=>Object.values(x||{}).reduce((s,z)=>s+(z.n||0),0);
+  Object.keys(incoming).forEach(d=>{
+    const inc=incoming[d], cur=state.stats[d];
+    if(!cur){ state.stats[d]=inc; return; }
+    if(daySum(inc)>daySum(cur)) state.stats[d]=inc;  // on garde la journée la plus complète
+  });
+}
+
 // Importe les commandes déjà livrées non encore comptées (1er lancement / restauration)
 function migrateBase(){
   let changed=false;
-  state.orders.forEach(o=>{ if(o.done && !o.credited){ applyToBase(o,+1); o.credited=true; changed=true; } });
+  state.orders.forEach(o=>{ if(o.done && !o.credited){ applyToBase(o,+1); statAdd(o,+1); o.credited=true; changed=true; } });
   if(changed) saveState();
 }
 
 /* ---------------- Form state ---------------- */
 let curType = "standard";
 let curMode = "new";   // "new" | "yesterday"
+
+/* ---------------- Livraisons reportées ---------------- */
+// Une commande reportée (o.postponed = "AAAA-MM-JJ") reste dans state.orders
+// (son étiquette reste donc RÉSERVÉE), mais quitte les listes actives :
+// feuille du livreur, message WhatsApp, totaux du jour. Elle revient
+// automatiquement dans sa zone le jour choisi, à l'ouverture de l'appli.
+function localISO(d){ const p=n=>String(n).padStart(2,'0'); return d.getFullYear()+"-"+p(d.getMonth()+1)+"-"+p(d.getDate()); }
+function activeOrders(z){ return state.orders.filter(o=>o.zone===z && !o.postponed); }
+function postponedOrders(){ return state.orders.filter(o=>o.postponed).sort((a,b)=> a.postponed===b.postponed ? a.code.localeCompare(b.code) : a.postponed.localeCompare(b.postponed)); }
+function wakePostponed(){
+  const today=localISO(new Date());
+  let n=0;
+  state.orders.forEach(o=>{
+    if(o.postponed && o.postponed<=today){ o.postponed=null; o.postponeNote=o.postponeNote||null; o.dueToday=true; n++; }
+  });
+  if(n>0){ saveState(); showToast("📅 "+n+" commande"+(n>1?"s":"")+" reportée"+(n>1?"s":"")+" revien"+(n>1?"nent":"t")+" aujourd'hui"); }
+  return n;
+}
+function ppDateLabel(iso){
+  const [y,m,d]=iso.split("-").map(Number);
+  const dt=new Date(y,m-1,d);
+  const today=new Date(); today.setHours(0,0,0,0);
+  const diff=Math.round((dt-today)/(24*3600*1000));
+  const txt=dt.toLocaleDateString('fr-FR',{weekday:'long',day:'2-digit',month:'long'});
+  if(diff<=0) return "⚠ "+txt;
+  if(diff===1) return txt+" (demain)";
+  return txt+" (dans "+diff+" jours)";
+}
 
 function parseCode(str){
   const raw=(str||"").trim().toUpperCase().replace(/\s+/g,"");
@@ -544,11 +750,16 @@ function getZoneFromForm(){
   return c ? COMMUNE_ZONE[c] : null;
 }
 function nextCodeFor(zone){
-  let max=0;
+  // Prend le premier numéro LIBRE de la zone (remplit les trous laissés
+  // par les commandes reprises d'hier, ex. A3/A11 occupés → A1, A2, A4…).
+  // Les numéros déjà pris ne sont jamais modifiés : ils sont simplement sautés.
+  const used = new Set();
   state.orders.filter(o=>o.zone===zone).forEach(o=>{
-    const n=parseInt((o.code||"").slice(1),10); if(!isNaN(n)&&n>max)max=n;
+    const n=parseInt((o.code||"").slice(1),10); if(!isNaN(n)) used.add(n);
   });
-  return zone+(max+1);
+  let n=1;
+  while(used.has(n)) n++;
+  return zone+n;
 }
 function computeTotal(){
   const qty=Math.max(1, parseInt(document.getElementById('f-qty').value||"1",10));
@@ -720,7 +931,7 @@ function addOrder(){
     carried: curMode==="yesterday"
   };
   state.orders.push(o);
-  state.orders.sort((a,b)=>a.zone===b.zone ? (parseInt(a.code.slice(1))-parseInt(b.code.slice(1))) : a.zone.localeCompare(b.zone));
+  sortOrders();
   saveState(); render();
   showToast(`${o.code} ${o.carried?'repris':'ajouté'} · ${ZONES[zone].label}`);
   // reset des champs (commune comprise → retour à « Choisir… »)
@@ -736,6 +947,161 @@ function addOrder(){
   refreshForm();
 }
 
+/* ---------------- Transfert de zone ---------------- */
+function sortOrders(){
+  state.orders.sort((a,b)=>a.zone===b.zone ? (parseInt(a.code.slice(1))-parseInt(b.code.slice(1))) : a.zone.localeCompare(b.zone));
+}
+function transferOrder(id){
+  const o=state.orders.find(x=>x.id===id); if(!o) return;
+  const others=Object.keys(ZONES).filter(z=>z!==o.zone);
+  const ans=prompt(
+    `Transférer ${o.code} — ${o.name}\nvers quelle zone ?\n\n`+
+    others.map(z=>`${z} = ${ZONES[z].label} · ${ZONES[z].name}`).join("\n")+
+    `\n\nTapez la lettre de la zone :`, others[0]);
+  if(ans===null) return; // annulé
+  const z=(ans||"").trim().toUpperCase();
+  if(!ZONES[z]){ showToast("Zone invalide — tapez "+others.join(" ou ")); return; }
+  if(z===o.zone){ showToast(o.code+" est déjà en "+ZONES[z].label); return; }
+  // si la commande était déjà livrée/créditée, on met la fiche client et les stats à jour
+  if(o.credited){ applyToBase(o,-1); statAdd(o,-1); }
+  const oldCode=o.code;
+  o.zone=z;
+  o.code=nextCodeFor(z);   // nouveau code = premier numéro libre de la zone d'arrivée
+  if(o.credited){ applyToBase(o,+1); statAdd(o,+1); }
+  sortOrders();
+  saveState(); render(); updateClientsCount(); refreshOpenZone();
+  showToast(`${oldCode} → ${o.code} · transféré en ${ZONES[z].label}`);
+}
+
+/* ---------------- Modifier une commande ---------------- */
+let editId=null;
+function editTotal(){
+  const qty=Math.max(1,parseInt(document.getElementById('e-qty').value||"1",10));
+  const ty=document.getElementById('e-type').value;
+  if(ty==="special") return parseFloat(document.getElementById('e-special').value||"0")||0;
+  return PRICE[ty]*qty;
+}
+function refreshEdit(){
+  const ty=document.getElementById('e-type').value;
+  document.getElementById('e-special-wrap').style.display = ty==="special" ? "" : "none";
+  document.getElementById('e-total').textContent = fmt(editTotal());
+}
+function openEdit(id){
+  const o=state.orders.find(x=>x.id===id); if(!o) return;
+  editId=id;
+  document.getElementById('e-code').textContent=o.code;
+  document.getElementById('e-name').value=o.name||"";
+  // communes limitées à la zone de la commande (le code ne change pas)
+  const sel=document.getElementById('e-commune'); sel.innerHTML="";
+  ZONES[o.zone].communes.slice().sort((a,b)=>a.localeCompare(b,'fr')).forEach(c=>{
+    const op=document.createElement('option'); op.value=c; op.textContent=c; sel.appendChild(op);
+  });
+  if(o.commune && !ZONES[o.zone].communes.includes(o.commune)){
+    const op=document.createElement('option'); op.value=o.commune; op.textContent=o.commune; sel.appendChild(op);
+  }
+  sel.value=o.commune||ZONES[o.zone].communes[0];
+  document.getElementById('e-address').value=addrText(o)||"";
+  document.getElementById('e-phone').value=(o.phone||"").replace(/\D/g,"");
+  document.getElementById('e-qty').value=o.qty||1;
+  document.getElementById('e-type').value=o.type||"standard";
+  document.getElementById('e-special').value = o.type==="special" ? (o.total||"") : "";
+  refreshEdit();
+  document.getElementById('editOv').classList.add('open');
+}
+function closeEdit(){ editId=null; document.getElementById('editOv').classList.remove('open'); }
+function saveEdit(){
+  const o=state.orders.find(x=>x.id===editId);
+  if(!o){ closeEdit(); return; }
+  const name=document.getElementById('e-name').value.trim();
+  if(!name){ showToast("Le nom du client est requis"); return; }
+  const phone=document.getElementById('e-phone').value.replace(/\D/g,"");
+  const conflict=phoneConflict(phone, o.id);
+  if(conflict){
+    if(!confirm("⚠ Le numéro "+phone+" est déjà enregistré pour "+conflict.code+" — "+conflict.name+" ("+conflict.commune+").\n\nEnregistrer quand même ?")) return;
+  }
+  // si déjà livrée : on retire l'ancienne version de la base clients et des stats…
+  if(o.credited){ applyToBase(o,-1); statAdd(o,-1); }
+  o.name=name;
+  o.commune=document.getElementById('e-commune').value;
+  o.address=document.getElementById('e-address').value.trim();
+  o.av=undefined; o.ref=undefined;          // migration vers le format « address »
+  o.phone=phone;
+  o.qty=Math.max(1,parseInt(document.getElementById('e-qty').value||"1",10));
+  o.type=document.getElementById('e-type').value;
+  o.total=editTotal();
+  // …et on ré-enregistre la version corrigée
+  if(o.credited){ applyToBase(o,+1); statAdd(o,+1); }
+  saveState(); render(); updateClientsCount(); refreshOpenZone();
+  if(document.getElementById('page-cli').style.display!=="none") renderClients();
+  closeEdit();
+  showToast(o.code+" modifié ✓");
+}
+
+/* ---------------- Reporter une livraison ---------------- */
+let ppId=null;
+function openPostpone(id){
+  const o=state.orders.find(x=>x.id===id); if(!o) return;
+  if(o.done){ showToast(o.code+" est déjà livrée — impossible de reporter"); return; }
+  ppId=id;
+  document.getElementById('pp-code').textContent=o.code;
+  document.getElementById('pp-who').textContent=o.name+" · "+o.commune;
+  const inp=document.getElementById('pp-date');
+  const t=new Date(); t.setDate(t.getDate()+1);
+  inp.min=localISO(t);
+  inp.value=o.postponed||inp.min;
+  document.getElementById('pp-note').value=o.postponeNote||"";
+  document.getElementById('postponeOv').classList.add('open');
+}
+function closePostpone(){ ppId=null; document.getElementById('postponeOv').classList.remove('open'); }
+function savePostpone(){
+  const o=state.orders.find(x=>x.id===ppId);
+  if(!o){ closePostpone(); return; }
+  const date=document.getElementById('pp-date').value;
+  if(!date){ showToast("Choisis la date exacte donnée par le client"); return; }
+  if(date<=localISO(new Date())){ showToast("La date doit être demain ou plus tard"); return; }
+  o.postponed=date;
+  o.postponeNote=document.getElementById('pp-note').value.trim()||null;
+  o.dueToday=false;
+  saveState(); render(); refreshOpenZone();
+  closePostpone();
+  showToast("📅 "+o.code+" reporté au "+ppDateLabel(date).replace("⚠ ",""));
+}
+function reactivateOrder(id){
+  const o=state.orders.find(x=>x.id===id); if(!o) return;
+  o.postponed=null; o.dueToday=true;
+  saveState(); render(); refreshOpenZone();
+  showToast(o.code+" réactivé — de retour en "+ZONES[o.zone].label);
+}
+function renderPostponed(){
+  const card=document.getElementById('postponedCard');
+  const list=postponedOrders();
+  if(list.length===0){ card.style.display="none"; return; }
+  card.style.display="";
+  document.getElementById('ppCount').textContent=list.length;
+  const zoneColor={A:"var(--a)",B:"var(--b)",C:"var(--c)"};
+  document.getElementById('ppList').innerHTML=list.map(o=>`
+    <div class="pp-row">
+      <div class="pp-code" style="background:${zoneColor[o.zone]}">${o.code}</div>
+      <div class="pp-main">
+        <div class="pp-name">${esc(o.name)}</div>
+        <div class="pp-meta">${esc(o.commune)} · ${o.qty} pochette${o.qty>1?'s':''} · ${fmt(o.total)}</div>
+        <div class="pp-date">📅 ${ppDateLabel(o.postponed)}</div>
+        ${o.postponeNote?`<div class="pp-note">✎ ${esc(o.postponeNote)}</div>`:""}
+      </div>
+      <div class="o-actions">
+        <button class="icon-btn back-now" data-reactivate="${o.id}" title="Réactiver maintenant">
+          <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M6.5 3.5L3 7l3.5 3.5M3 7h7a3 3 0 013 3v2.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <button class="icon-btn pp" data-postpone="${o.id}" title="Changer la date">
+          <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><rect x="2.5" y="3.5" width="11" height="10" rx="1.5" stroke="currentColor" stroke-width="1.4"/><path d="M2.5 6.5h11M5.5 2v2.5M10.5 2v2.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+        </button>
+        <button class="icon-btn del" data-del="${o.id}" title="Supprimer">
+          <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M3 4h10M6.5 4V3h3v1M5 4l.5 9h5L11 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </div>`).join("");
+}
+
 /* ---------------- Type selector ---------------- */
 function setType(t){
   curType=t;
@@ -745,7 +1111,7 @@ function setType(t){
 
 /* ---------------- Rendu des zones ---------------- */
 function zoneCardHTML(z){
-  const orders=state.orders.filter(o=>o.zone===z);
+  const orders=activeOrders(z);
   const sum=orders.reduce((s,o)=>s+(o.total||0),0);
   return `
       <div class="zone-top">
@@ -776,7 +1142,7 @@ function render(){
   const wrap=document.getElementById('zones'); wrap.innerHTML="";
   let counts={A:0,B:0,C:0};
   Object.keys(ZONES).forEach(z=>{
-    counts[z]=state.orders.filter(o=>o.zone===z).length;
+    counts[z]=activeOrders(z).length;
     const cls={A:"za",B:"zb",C:"zc"}[z];
     const sec=document.createElement('section');
     sec.className="zone "+cls;
@@ -786,7 +1152,9 @@ function render(){
   document.getElementById('rA').textContent=counts.A;
   document.getElementById('rB').textContent=counts.B;
   document.getElementById('rC').textContent=counts.C;
+  renderPostponed();
   bindZoneEvents();
+  updateBackupNag();
   refreshForm();
 }
 
@@ -810,12 +1178,22 @@ function orderHTML(o){
           <span class="tag">${o.qty} pochette${o.qty>1?'s':''}</span>
           ${typeTag}
           ${o.carried?`<span class="tag carried">↩ hier</span>`:``}
+          ${o.dueToday?`<span class="tag due">📅 prévu aujourd'hui</span>`:``}
           <span class="tag price">${fmt(o.total)}</span>
         </div>
       </div>
       <div class="o-actions">
         <button class="icon-btn check ${o.done?'on':''}" data-check="${o.id}" title="Marquer livré">
           <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M3 8.5l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <button class="icon-btn edit" data-edit="${o.id}" title="Modifier la commande">
+          <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M11.3 2.7a1.5 1.5 0 012.1 2.1L5.5 12.7 2.5 13.5l.8-3L11.3 2.7z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
+        </button>
+        <button class="icon-btn move" data-move="${o.id}" title="Transférer vers une autre zone">
+          <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M5.5 3.5L2.5 6.5l3 3M2.5 6.5H10M10.5 12.5l3-3-3-3M13.5 9.5H6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <button class="icon-btn pp" data-postpone="${o.id}" title="Reporter à une date précise">
+          <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><rect x="2.5" y="3.5" width="11" height="10" rx="1.5" stroke="currentColor" stroke-width="1.4"/><path d="M2.5 6.5h11M5.5 2v2.5M10.5 2v2.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
         </button>
         <button class="icon-btn del" data-del="${o.id}" title="Supprimer">
           <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M3 4h10M6.5 4V3h3v1M5 4l.5 9h5L11 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -826,7 +1204,7 @@ function orderHTML(o){
 
 /* ---------------- Message WhatsApp ---------------- */
 function buildMessage(z){
-  const orders=state.orders.filter(o=>o.zone===z);
+  const orders=activeOrders(z);
   const d=new Date().toLocaleDateString('fr-FR',{day:'2-digit',month:'2-digit',year:'numeric'});
   let m=`🧾 *BK POCHETTE CONGO* — ${ZONES[z].label} · ${ZONES[z].name}\n`;
   m+=`📅 ${d}\n`;
@@ -869,7 +1247,7 @@ async function copyMessage(z){
 
 /* ---------------- Impression feuille livreur ---------------- */
 function zoneSheetHTML(z){
-  const orders=state.orders.filter(o=>o.zone===z);
+  const orders=activeOrders(z);
   const sum=orders.reduce((s,o)=>s+(o.total||0),0);
   const accent={A:"#D97A06",B:"#0E8C7F",C:"#C42A6B"}[z];
   const d=new Date().toLocaleDateString('fr-FR',{weekday:'long',day:'2-digit',month:'long',year:'numeric'});
@@ -1078,7 +1456,7 @@ function renderPasteSummary(r){
 function bindZoneEvents(){
   document.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{
     const o=state.orders.find(o=>o.id===b.dataset.del);
-    if(o && o.credited) applyToBase(o,-1);
+    if(o && o.credited){ applyToBase(o,-1); statAdd(o,-1); }
     state.orders=state.orders.filter(o=>o.id!==b.dataset.del);
     saveState(); render(); updateClientsCount(); refreshOpenZone(); showToast("Commande supprimée");
   });
@@ -1086,12 +1464,16 @@ function bindZoneEvents(){
     const o=state.orders.find(o=>o.id===b.dataset.check);
     if(o){
       o.done=!o.done;
-      if(o.done){ o.deliveredAt=new Date().toISOString(); if(!o.credited){ applyToBase(o,+1); o.credited=true; } }
-      else { if(o.credited){ applyToBase(o,-1); o.credited=false; } }
+      if(o.done){ o.deliveredAt=new Date().toISOString(); if(!o.credited){ applyToBase(o,+1); statAdd(o,+1); o.credited=true; } }
+      else { if(o.credited){ applyToBase(o,-1); statAdd(o,-1); o.credited=false; } }
       saveState(); render(); updateClientsCount(); refreshOpenZone();
       if(document.getElementById('page-cli').style.display!=="none") renderClients();
     }
   });
+  document.querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>openEdit(b.dataset.edit));
+  document.querySelectorAll('[data-postpone]').forEach(b=>b.onclick=()=>openPostpone(b.dataset.postpone));
+  document.querySelectorAll('[data-reactivate]').forEach(b=>b.onclick=()=>reactivateOrder(b.dataset.reactivate));
+  document.querySelectorAll('[data-move]').forEach(b=>b.onclick=()=>transferOrder(b.dataset.move));
   document.querySelectorAll('[data-wa]').forEach(b=>b.onclick=()=>sendWhatsApp(b.dataset.wa));
   document.querySelectorAll('[data-copy]').forEach(b=>b.onclick=()=>copyMessage(b.dataset.copy));
   document.querySelectorAll('[data-print]').forEach(b=>b.onclick=()=>printZones([b.dataset.print]));
@@ -1114,20 +1496,61 @@ function downloadFile(name,content,type){
 }
 function exportBackup(){
   if(state.orders.length===0 && Object.keys(state.clients).length===0){ showToast("Rien à sauvegarder"); return; }
-  const data=JSON.stringify({app:"BK Pochette Congo",version:2,exportedAt:new Date().toISOString(),orders:state.orders,clients:state.clients},null,2);
+  const data=JSON.stringify({app:"BK Pochette Congo",version:3,exportedAt:new Date().toISOString(),orders:state.orders,clients:state.clients,stats:state.stats||{}},null,2);
   downloadFile("bk-sauvegarde-"+dateStamp()+".json",data,"application/json");
+  markBackupDone();
   showToast("Sauvegarde téléchargée");
+}
+
+/* ---- Rappel de sauvegarde automatique ---- */
+const BACKUP_NAG_DAYS = 3;
+function markBackupDone(){
+  try{ localStorage.setItem(BACKUP_KEY, String(Date.now())); }catch(e){}
+  updateBackupNag();
+}
+function updateBackupNag(){
+  const nag=document.getElementById('backupNag'); if(!nag) return;
+  const hasData = state.orders.length>0 || Object.keys(state.clients).length>0;
+  let last=0;
+  try{ last=parseInt(localStorage.getItem(BACKUP_KEY)||"0",10)||0; }catch(e){}
+  const days = last ? Math.floor((Date.now()-last)/(24*3600*1000)) : null;
+  const due = hasData && (days===null || days>=BACKUP_NAG_DAYS);
+  nag.classList.toggle('show', due);
+  if(due){
+    document.getElementById('backupNagTxt').textContent = days===null
+      ? "Aucune sauvegarde n'a encore été téléchargée sur cet appareil. Si le téléphone est perdu ou le navigateur nettoyé, tout disparaît."
+      : "Dernière sauvegarde il y a "+days+" jour"+(days>1?"s":"")+". Télécharge une copie de sécurité pour protéger tes données.";
+  }
 }
 function csvCell(v){ v=(v==null?"":String(v)); return /[";\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v; }
 function exportCSV(){
   if(state.orders.length===0){ showToast("Aucune commande à exporter"); return; }
-  const head=["Code","Zone","Nom","Commune","Adresse","Telephone","Quantite","Type","Montant","Livre"];
+  const head=["Code","Zone","Nom","Commune","Adresse","Telephone","Quantite","Type","Montant","Livre","Reportee au"];
   const rows=[head];
   state.orders.forEach(o=>rows.push([o.code,o.zone,o.name,o.commune,addrText(o),o.phone,o.qty,
-    (o.type==='premium'?'Premium':o.type==='special'?'Special':'Standard'),o.total,o.done?'oui':'non']));
+    (o.type==='premium'?'Premium':o.type==='special'?'Special':'Standard'),o.total,o.done?'oui':'non',o.postponed||'']));
   const csv="\uFEFF"+rows.map(r=>r.map(csvCell).join(";")).join("\r\n");
   downloadFile("bk-commandes-"+dateStamp()+".csv",csv,"text/csv;charset=utf-8");
   showToast("Fichier Excel (CSV) téléchargé");
+}
+// Fusionne la base clients d'une sauvegarde dans la base actuelle
+// SANS jamais supprimer ni écraser un client existant.
+function mergeClients(incoming){
+  if(!incoming) return;
+  Object.keys(incoming).forEach(k=>{
+    const inc=incoming[k], cur=state.clients[k];
+    if(!inc) return;
+    if(!cur){ state.clients[k]=inc; return; }   // client inconnu → ajouté
+    // client déjà présent → on garde la fiche la plus complète (plus de commandes)
+    if((inc.orders||0) > (cur.orders||0)){
+      const last=(cur.lastDate && (!inc.lastDate || cur.lastDate>inc.lastDate)) ? cur.lastDate : inc.lastDate;
+      state.clients[k]=Object.assign({}, inc, {lastDate:last});
+    }else{
+      if(inc.lastDate && (!cur.lastDate || inc.lastDate>cur.lastDate)) cur.lastDate=inc.lastDate;
+      if(!cur.phone && inc.phone){ cur.phone=inc.phone; cur.noPhone=false; }
+      if(!cur.name && inc.name) cur.name=inc.name;
+    }
+  });
 }
 function importBackup(file){
   const r=new FileReader();
@@ -1137,10 +1560,12 @@ function importBackup(file){
       const orders=Array.isArray(p)?p:(p.orders||(p.state&&p.state.orders));
       if(!Array.isArray(orders)) throw 0;
       const clients=(p&&p.clients)|| (p&&p.state&&p.state.clients) || null;
-      if(confirm("Remplacer les données actuelles par la sauvegarde ("+orders.length+" commande(s)"+(clients?", "+Object.keys(clients).length+" client(s)":"")+") ?")){
+      if(confirm("Remplacer les commandes actuelles par la sauvegarde ("+orders.length+" commande(s)"+(clients?", "+Object.keys(clients).length+" client(s)":"")+") ?\n\nℹ La base clients livrés sera CONSERVÉE et complétée — jamais effacée.")){
         state.orders=orders;
-        state.clients = clients ? clients : {};
-        if(!clients) migrateBase();   // ancienne sauvegarde sans base : on reconstruit depuis les livrées
+        mergeClients(clients);        // la base clients existante n'est JAMAIS écrasée
+        mergeStats(p&&p.stats);       // l'historique statistique est fusionné, jamais perdu
+        migrateBase();                // crédite les livrées pas encore comptées
+        wakePostponed();              // les reportées dont la date est passée reviennent
         saveState(); render(); updateClientsCount();
         if(document.getElementById('page-cli').style.display!=="none") renderClients();
         showToast("Sauvegarde restaurée");
@@ -1149,6 +1574,83 @@ function importBackup(file){
   };
   r.readAsText(file);
 }
+
+/* ---------------- Statistiques ---------------- */
+function statsDayLabel(iso){
+  const [y,m,d]=iso.split("-").map(Number);
+  const dt=new Date(y,m-1,d);
+  const today=new Date(); today.setHours(0,0,0,0);
+  const diff=Math.round((today-dt)/(24*3600*1000));
+  if(diff===0) return "Aujourd'hui";
+  if(diff===1) return "Hier";
+  return dt.toLocaleDateString('fr-FR',{weekday:'short',day:'2-digit',month:'2-digit'});
+}
+function renderStats(){
+  const body=document.getElementById('statsBody');
+  const stats=state.stats||{};
+  // 7 derniers jours (y compris aujourd'hui)
+  const days=[];
+  for(let i=6;i>=0;i--){
+    const dt=new Date(); dt.setDate(dt.getDate()-i);
+    const iso=dt.getFullYear()+"-"+String(dt.getMonth()+1).padStart(2,'0')+"-"+String(dt.getDate()).padStart(2,'0');
+    const day=stats[iso]||{};
+    let n=0,t=0,c=0;
+    Object.keys(day).forEach(z=>{ n+=day[z].n||0; t+=day[z].t||0; c+=day[z].c||0; });
+    days.push({iso,n,t,c,day});
+  }
+  const today=days[days.length-1];
+  const week={n:0,t:0,c:0,zones:{A:{n:0,t:0},B:{n:0,t:0},C:{n:0,t:0}}};
+  days.forEach(d=>{
+    week.n+=d.n; week.t+=d.t; week.c+=d.c;
+    Object.keys(d.day).forEach(z=>{ if(week.zones[z]){ week.zones[z].n+=d.day[z].n||0; week.zones[z].t+=d.day[z].t||0; } });
+  });
+  const pending=state.orders.filter(o=>!o.done && !o.postponed).length;
+  const ppCount=state.orders.filter(o=>o.postponed).length;
+  const maxDay=Math.max(1,...days.map(d=>d.n));
+  const zoneColor={A:"var(--a)",B:"var(--b)",C:"var(--c)"};
+  const carriedPct = week.n ? Math.round(100*week.c/week.n) : 0;
+
+  let h=`
+    <div class="st-cards">
+      <div><b>${today.n}</b><span>livrées aujourd'hui</span></div>
+      <div><b>${fmt(today.t)}</b><span>encaissé aujourd'hui</span></div>
+      <div><b>${pending}</b><span>en attente${ppCount?` · ${ppCount} 📅`:``}</span></div>
+    </div>
+    <div class="st-sec">7 derniers jours — ${week.n} livraison${week.n>1?'s':''} · ${fmt(week.t)}</div>`;
+  if(week.n===0){
+    h+=`<div class="st-empty">Aucune livraison enregistrée sur les 7 derniers jours.<br>Les statistiques se remplissent à chaque commande cochée ✓ livrée.</div>`;
+  }else{
+    days.forEach(d=>{
+      h+=`<div class="st-row">
+        <span class="st-lbl" style="flex:0 0 92px">${statsDayLabel(d.iso)}</span>
+        <span class="st-bar"><i style="width:${Math.round(100*d.n/maxDay)}%;background:var(--ink)"></i></span>
+        <span class="st-n">${d.n||"—"}</span>
+        <span class="st-t">${d.n?fmt(d.t):""}</span>
+      </div>`;
+    });
+    h+=`<div class="st-sec">Par zone (7 jours)</div>`;
+    const maxZ=Math.max(1,...Object.values(week.zones).map(z=>z.n));
+    ["A","B","C"].forEach(z=>{
+      const s=week.zones[z];
+      h+=`<div class="st-row">
+        <span class="st-dot" style="background:${zoneColor[z]}"></span>
+        <span class="st-lbl" style="flex:0 0 110px">Zone ${z} · ${ZONES[z].name}</span>
+        <span class="st-bar"><i style="width:${Math.round(100*s.n/maxZ)}%;background:${zoneColor[z]}"></i></span>
+        <span class="st-n">${s.n||"—"}</span>
+        <span class="st-t">${s.n?fmt(s.t):""}</span>
+      </div>`;
+    });
+    h+=`<div class="st-sec">Reports</div>
+      <div class="st-row">
+        <span class="st-lbl">Livraisons reportées d'un jour à l'autre (↩)</span>
+        <span class="st-t">${week.c} · ${carriedPct}%</span>
+      </div>
+      <div class="m-hint" style="margin-top:6px">Un taux élevé de reports dans une zone peut indiquer qu'un livreur a besoin de renfort ou que l'itinéraire est trop long.</div>`;
+  }
+  body.innerHTML=h;
+}
+function openStats(){ renderStats(); document.getElementById('statsOv').classList.add('open'); }
+function closeStats(){ document.getElementById('statsOv').classList.remove('open'); }
 
 /* ---------------- Onglets & base clients ---------------- */
 let curZonePage=null;
@@ -1169,7 +1671,7 @@ function openZonePage(z){
   renderZonePage(z);
 }
 function renderZonePage(z){
-  const orders=state.orders.filter(o=>o.zone===z);
+  const orders=activeOrders(z);
   const pending=orders.filter(o=>!o.done).length;
   const delivered=orders.filter(o=>o.done).length;
   const cls={A:"za",B:"zb",C:"zc"}[z];
@@ -1193,14 +1695,14 @@ function renderZonePage(z){
   bindZoneEvents();   // (re)branche ✓ / supprimer / WhatsApp / Copier / Imprimer de la carte
 }
 function reportZone(z){
-  const orders=state.orders.filter(o=>o.zone===z);
+  const orders=activeOrders(z);
   if(orders.length===0){ showToast("Aucune livraison dans cette zone"); return; }
   const delivered=orders.filter(o=>o.done).length;
   const pending=orders.filter(o=>!o.done).length;
   if(pending===0 && delivered===0){ return; }
   if(confirm(`${ZONES[z].label} · ${ZONES[z].name} :\n• ${delivered} livrée(s) seront retirées\n• ${pending} non livrée(s) gardées pour la prochaine liste (avec leur étiquette)\n\nContinuer ?`)){
-    state.orders = state.orders.filter(o=> !(o.zone===z && o.done));
-    state.orders.filter(o=>o.zone===z).forEach(o=>o.carried=true);
+    state.orders = state.orders.filter(o=> !(o.zone===z && o.done && !o.postponed));
+    activeOrders(z).forEach(o=>{ o.carried=true; o.dueToday=false; });
     saveState(); render(); renderZonePage(z);
     showToast(`${ZONES[z].label} : ${pending} non livrée(s) reportée(s)`);
   }
@@ -1291,6 +1793,7 @@ function init(){
   fillCliCommunes();
   loadState();
   migrateBase();          // importe les commandes déjà livrées dans la base
+  wakePostponed();        // fait revenir les reportées dont le jour est arrivé
   updateStoreNote();
   updateClientsCount();
   render();
@@ -1336,27 +1839,55 @@ function init(){
   });
   document.getElementById('newDayBtn').addEventListener('click',()=>{
     const delivered=state.orders.filter(o=>o.done).length;
-    const pending=state.orders.filter(o=>!o.done).length;
+    const pending=state.orders.filter(o=>!o.done && !o.postponed).length;
     if(state.orders.length===0){ showToast("Aucune livraison enregistrée"); return; }
-    if(confirm(`Nouvelle journée :\n• ${delivered} commande(s) livrée(s) seront retirées\n• ${pending} non livrée(s) seront conservées avec leur étiquette\n\nContinuer ?`)){
+    const pp=state.orders.filter(o=>o.postponed).length;
+    if(confirm(`Nouvelle journée :\n• ${delivered} commande(s) livrée(s) seront retirées\n• ${pending} non livrée(s) seront conservées avec leur étiquette${pp?`\n• ${pp} reportée(s) 📅 conservée(s) jusqu'à leur date`:``}\n• Une sauvegarde sera téléchargée automatiquement\n\nContinuer ?`)){
+      exportBackup();   // sauvegarde automatique de la journée avant nettoyage
       state.orders=state.orders.filter(o=>!o.done);
-      state.orders.forEach(o=>o.carried=true);
-      saveState(); render(); showToast("Nouvelle journée — non livrées conservées");
+      state.orders.forEach(o=>{ if(!o.postponed){ o.carried=true; } o.dueToday=false; });
+      saveState(); render(); showToast("Nouvelle journée — sauvegarde téléchargée ✓");
     }
   });
   document.getElementById('clearAllBtn').addEventListener('click',()=>{
     if(state.orders.length===0){ showToast("La liste est déjà vide"); return; }
-    if(confirm("Tout effacer et repartir à A1, B1, C1 ?\nCette action supprime TOUTES les commandes, livrées ou non.")){
-      state.orders=[]; saveState(); render(); showToast("Listes vidées — numérotation remise à zéro");
+    const ppAll=state.orders.filter(o=>o.postponed).length;
+    if(confirm("Tout effacer et repartir à A1, B1, C1 ?\nCette action supprime TOUTES les commandes, livrées ou non"+(ppAll?", Y COMPRIS "+ppAll+" reportée(s) 📅":"")+".\n\nℹ La base clients livrés est CONSERVÉE.")){
+      state.orders=[]; saveState(); render(); showToast("Listes vidées — base clients conservée");
     }
   });
 
   document.getElementById('backupBtn').addEventListener('click',exportBackup);
+  document.getElementById('backupNagBtn').addEventListener('click',exportBackup);
   document.getElementById('csvBtn').addEventListener('click',exportCSV);
   document.getElementById('restoreBtn').addEventListener('click',()=>document.getElementById('restoreInput').click());
   document.getElementById('restoreInput').addEventListener('change',e=>{
     const f=e.target.files[0]; if(f) importBackup(f); e.target.value="";
   });
+
+  // Modale d'édition
+  document.getElementById('editClose').addEventListener('click',closeEdit);
+  document.getElementById('editSave').addEventListener('click',saveEdit);
+  document.getElementById('editOv').addEventListener('click',e=>{ if(e.target.id==='editOv') closeEdit(); });
+  ['e-qty','e-special'].forEach(id=>document.getElementById(id).addEventListener('input',refreshEdit));
+  document.getElementById('e-type').addEventListener('change',refreshEdit);
+  document.getElementById('e-phone').addEventListener('input',()=>{
+    const el=document.getElementById('e-phone'); const d=el.value.replace(/\D/g,""); if(el.value!==d) el.value=d;
+  });
+
+  // Modale de report
+  document.getElementById('ppClose').addEventListener('click',closePostpone);
+  document.getElementById('ppSave').addEventListener('click',savePostpone);
+  document.getElementById('postponeOv').addEventListener('click',e=>{ if(e.target.id==='postponeOv') closePostpone(); });
+  // si l'appli reste ouverte et qu'on la rouvre un autre jour → réveil des reportées
+  document.addEventListener('visibilitychange',()=>{ if(!document.hidden && wakePostponed()>0) render(); });
+
+  // Statistiques
+  document.getElementById('statsBtn').addEventListener('click',openStats);
+  document.getElementById('statsClose').addEventListener('click',closeStats);
+  document.getElementById('statsOv').addEventListener('click',e=>{ if(e.target.id==='statsOv') closeStats(); });
+
+  updateBackupNag();
 
   setPhoneMode("cd");
   setMode("new");
