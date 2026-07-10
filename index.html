@@ -325,9 +325,46 @@
     .field.half{grid-column:auto}
   }
   @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+  /* ---------- Verrouillage (code de sécurité) ---------- */
+  .lock-ov{position:fixed;inset:0;background:var(--ink);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px}
+  .lock-ov.hidden{display:none}
+  .lock-box{width:100%;max-width:300px;text-align:center;color:#fff}
+  .lock-logo{width:52px;height:52px;border-radius:14px;margin:0 auto 16px;background:linear-gradient(135deg,var(--a) 0%,var(--c) 55%,var(--b) 100%);display:flex;align-items:center;justify-content:center;font-family:var(--font-d);font-weight:700;font-size:20px}
+  .lock-box h2{font-family:var(--font-d);font-size:16px;font-weight:600;margin-bottom:18px;color:#D6D9E1}
+  .lock-dots{display:flex;gap:14px;justify-content:center;margin-bottom:26px}
+  .lock-dots span{width:13px;height:13px;border-radius:50%;border:1.5px solid rgba(255,255,255,.35);transition:.12s}
+  .lock-dots span.filled{background:#fff;border-color:#fff}
+  .lock-dots.err span{border-color:var(--danger);background:var(--danger)}
+  .lock-pad{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:240px;margin:0 auto}
+  .lock-pad button{aspect-ratio:1;border-radius:50%;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);color:#fff;font-family:var(--font-d);font-size:19px;font-weight:600;display:flex;align-items:center;justify-content:center;transition:.1s}
+  .lock-pad button:active{background:rgba(255,255,255,.2);transform:scale(.95)}
+  .lock-pad button.ghost{background:none;border:none}
+  .lock-err{font-size:12.5px;color:var(--danger);margin-top:16px;min-height:16px;font-weight:600}
+  @keyframes shake{10%,90%{transform:translateX(-2px)}20%,80%{transform:translateX(4px)}30%,50%,70%{transform:translateX(-8px)}40%,60%{transform:translateX(8px)}}
+  .lock-dots.shake{animation:shake .5s}
+
+  /* ---------- Revenu cumulé masqué ---------- */
+  .cli-rev-box{cursor:pointer;user-select:none}
+  .cli-rev-box span{display:flex;align-items:center;justify-content:center;gap:3px}
 </style>
 </head>
 <body>
+
+<div class="lock-ov" id="lockOv">
+  <div class="lock-box">
+    <div class="lock-logo">BK</div>
+    <h2>Entrez le code de sécurité</h2>
+    <div class="lock-dots" id="lockDots"><span></span><span></span><span></span><span></span></div>
+    <div class="lock-pad" id="lockPad">
+      <button data-k="1">1</button><button data-k="2">2</button><button data-k="3">3</button>
+      <button data-k="4">4</button><button data-k="5">5</button><button data-k="6">6</button>
+      <button data-k="7">7</button><button data-k="8">8</button><button data-k="9">9</button>
+      <button class="ghost" data-k="none"></button><button data-k="0">0</button><button data-k="del">⌫</button>
+    </div>
+    <div class="lock-err" id="lockErr">&nbsp;</div>
+  </div>
+</div>
 
 <header>
   <div class="brand">
@@ -478,6 +515,7 @@
       <button class="reset-btn save" id="backupBtn">💾 Sauvegarder</button>
       <button class="reset-btn" id="restoreBtn">↪ Restaurer</button>
       <button class="reset-btn" id="statsBtn">📊 Statistiques</button>
+      <button class="reset-btn" id="settingsBtn">⚙ Paramètres</button>
       <button class="reset-btn" id="csvBtn">Excel (CSV)</button>
       <button class="reset-btn print-all" id="printAllBtn">Imprimer tout</button>
       <button class="reset-btn" id="newDayBtn">Nouvelle journée</button>
@@ -492,7 +530,7 @@
       <div class="cli-stats">
         <div><b id="cliTotal">0</b><span>clients</span></div>
         <div><b id="cliLoyal">0</b><span>fidèles (2+)</span></div>
-        <div><b id="cliRevenue">0$</b><span>cumulé</span></div>
+        <div class="cli-rev-box" id="cliRevBox"><b id="cliRevenue">••••</b><span>🔒 cumulé</span></div>
       </div>
       <input type="text" id="cliSearch" placeholder="Rechercher un nom ou un numéro…">
       <div class="cli-row">
@@ -504,9 +542,11 @@
         <button class="reset-btn save" id="cliExpDataBtn">⬆ Exporter la base clients (échange entre téléphones)</button>
         <button class="reset-btn" id="cliImpDataBtn">⬇ Importer une base clients</button>
         <button class="reset-btn" id="cliExportBtn">Excel (CSV)</button>
+        <button class="reset-btn" id="cliMetaBtn">📣 Export pour Meta Ads (CSV)</button>
         <input type="file" id="cliImportInput" accept="application/json,.json" style="display:none">
       </div>
       <div class="cli-imp-hint">L'import fusionne sans doublons : une même cliente livrée à la même date n'est jamais comptée deux fois. Accepte aussi les fichiers de sauvegarde complète (bk-sauvegarde-…) — seuls les clients en sont extraits, tes commandes en cours ne sont pas touchées.</div>
+      <div class="cli-imp-hint">Le bouton Meta Ads génère un fichier phone/fn/ln prêt pour une Audience personnalisée (Facebook/Instagram). Numéros congolais formatés en +243 automatiquement. Fichier découpé en plusieurs lots si plus de 10 000 clients.</div>
     </section>
     <div id="cliList" class="cli-list"></div>
   </div>
@@ -584,6 +624,27 @@
   </div>
 </div>
 
+<!-- ====== Modale : paramètres ====== -->
+<div class="modal-ov" id="settingsOv">
+  <div class="modal">
+    <h3><span>⚙ Paramètres</span><button class="m-close" id="settingsClose">✕</button></h3>
+    <div class="m-field">
+      <label>Code de sécurité actuel</label>
+      <input type="password" id="set-old" inputmode="numeric" maxlength="4" placeholder="••••" autocomplete="off">
+    </div>
+    <div class="m-field">
+      <label>Nouveau code (4 chiffres)</label>
+      <input type="password" id="set-new1" inputmode="numeric" maxlength="4" placeholder="••••" autocomplete="off">
+    </div>
+    <div class="m-field">
+      <label>Confirmer le nouveau code</label>
+      <input type="password" id="set-new2" inputmode="numeric" maxlength="4" placeholder="••••" autocomplete="off">
+    </div>
+    <div class="m-hint" id="set-hint">Le code est demandé à chaque ouverture de l'application, et pour afficher le montant cumulé de la base clients.</div>
+    <button class="m-save" id="settingsSave">Enregistrer le nouveau code</button>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
@@ -601,8 +662,11 @@ const ZONE_VAR = {A:"--a",B:"--b",C:"--c"};
 /* ---------------- État + stockage ---------------- */
 const STORE_KEY = "bkpc_state_v1";
 const BACKUP_KEY = "bkpc_last_backup";
+const PIN_KEY = "bkpc_pin";
+const UNLOCK_KEY = "bkpc_unlocked";
 let state = { orders:[], clients:{}, stats:{} };
 let memoryOnly = false;
+let revenueVisible = false;
 
 function loadState(){
   try{
@@ -624,6 +688,52 @@ function updateStoreNote(){
   const n=document.getElementById('storeNote'), t=document.getElementById('storeTxt');
   if(memoryOnly){ n.classList.add('warn'); t.textContent="Mode sans sauvegarde — données perdues à la fermeture"; }
   else{ n.classList.remove('warn'); t.textContent="Enregistré sur cet appareil"; }
+}
+
+/* ---------------- Verrouillage par code de sécurité ---------------- */
+function getPin(){
+  try{ return localStorage.getItem(PIN_KEY) || "1705"; }catch(e){ return "1705"; }
+}
+function setPin(p){
+  try{ localStorage.setItem(PIN_KEY, p); return true; }catch(e){ return false; }
+}
+let lockInput = "";
+function renderLockDots(){
+  const dots=document.querySelectorAll('#lockDots span');
+  dots.forEach((d,i)=>d.classList.toggle('filled', i<lockInput.length));
+}
+function lockPress(k){
+  const err=document.getElementById('lockErr');
+  if(k==="del"){ lockInput=lockInput.slice(0,-1); err.textContent="\u00a0"; renderLockDots(); return; }
+  if(k==="none") return;
+  if(lockInput.length>=4) return;
+  lockInput+=k;
+  renderLockDots();
+  if(lockInput.length===4){
+    if(lockInput===getPin()){
+      try{ sessionStorage.setItem(UNLOCK_KEY,"1"); }catch(e){}
+      document.getElementById('lockOv').classList.add('hidden');
+      lockInput="";
+    }else{
+      err.textContent="Code incorrect";
+      const dotsWrap=document.getElementById('lockDots');
+      dotsWrap.classList.add('err','shake');
+      setTimeout(()=>{ dotsWrap.classList.remove('err','shake'); lockInput=""; renderLockDots(); },420);
+    }
+  }
+}
+function initLock(){
+  let already=false;
+  try{ already = sessionStorage.getItem(UNLOCK_KEY)==="1"; }catch(e){}
+  if(already){ document.getElementById('lockOv').classList.add('hidden'); return; }
+  document.getElementById('lockPad').addEventListener('click',e=>{
+    const b=e.target.closest('button[data-k]'); if(b) lockPress(b.dataset.k);
+  });
+  document.addEventListener('keydown',e=>{
+    if(document.getElementById('lockOv').classList.contains('hidden')) return;
+    if(/^[0-9]$/.test(e.key)) lockPress(e.key);
+    else if(e.key==="Backspace") lockPress("del");
+  });
 }
 
 /* ---------------- Base clients ---------------- */
@@ -1770,6 +1880,28 @@ function renderStats(){
 function openStats(){ renderStats(); document.getElementById('statsOv').classList.add('open'); }
 function closeStats(){ document.getElementById('statsOv').classList.remove('open'); }
 
+/* ---------------- Paramètres : changer le code de sécurité ---------------- */
+function openSettings(){
+  ['set-old','set-new1','set-new2'].forEach(id=>document.getElementById(id).value="");
+  document.getElementById('set-hint').textContent="Le code est demandé à chaque ouverture de l'application, et pour afficher le montant cumulé de la base clients.";
+  document.getElementById('set-hint').style.color="var(--ink-faint)";
+  document.getElementById('settingsOv').classList.add('open');
+}
+function closeSettings(){ document.getElementById('settingsOv').classList.remove('open'); }
+function saveSettings(){
+  const hint=document.getElementById('set-hint');
+  const old=document.getElementById('set-old').value.trim();
+  const n1=document.getElementById('set-new1').value.trim();
+  const n2=document.getElementById('set-new2').value.trim();
+  const fail=(msg)=>{ hint.textContent=msg; hint.style.color="var(--danger)"; };
+  if(old!==getPin()){ fail("Code actuel incorrect."); return; }
+  if(!/^\d{4}$/.test(n1)){ fail("Le nouveau code doit contenir exactement 4 chiffres."); return; }
+  if(n1!==n2){ fail("Les deux nouveaux codes ne correspondent pas."); return; }
+  if(!setPin(n1)){ fail("Impossible d'enregistrer le code sur cet appareil."); return; }
+  closeSettings();
+  showToast("✓ Code de sécurité modifié");
+}
+
 /* ---------------- Onglets & base clients ---------------- */
 let curZonePage=null;
 function setTab(t){
@@ -1858,7 +1990,11 @@ function renderClients(){
   const all=Object.values(state.clients);
   document.getElementById('cliTotal').textContent=all.length;
   document.getElementById('cliLoyal').textContent=all.filter(c=>c.orders>=2).length;
-  document.getElementById('cliRevenue').textContent=fmt(all.reduce((s,c)=>s+(c.total||0),0));
+  const totalRevenue=all.reduce((s,c)=>s+(c.total||0),0);
+  const revEl=document.getElementById('cliRevenue');
+  const revLbl=document.querySelector('#cliRevBox span');
+  if(revenueVisible){ revEl.textContent=fmt(totalRevenue); revLbl.textContent="👁 cumulé"; }
+  else{ revEl.textContent="••••"; revLbl.textContent="🔒 cumulé"; }
   updateClientsCount();
 
   const list=clientList();
@@ -1890,6 +2026,13 @@ function renderClients(){
     </div>`;
   }).join("");
 }
+function toggleRevenue(){
+  if(revenueVisible){ revenueVisible=false; renderClients(); return; }
+  const code=prompt("Code de sécurité pour afficher le montant cumulé :");
+  if(code===null) return;
+  if(code===getPin()){ revenueVisible=true; renderClients(); }
+  else{ showToast("Code incorrect"); }
+}
 function exportClientsCSV(){
   const all=Object.values(state.clients);
   if(all.length===0){ showToast("Base clients vide"); return; }
@@ -1903,6 +2046,31 @@ function exportClientsCSV(){
   const csv="\uFEFF"+rows.map(r=>r.map(csvCell).join(";")).join("\r\n");
   downloadFile("bk-clients-"+dateStamp()+".csv",csv,"text/csv;charset=utf-8");
   showToast("Base clients exportée");
+}
+function metaCsvCell(v){ v=(v==null?"":String(v)); return /[",\n]/.test(v) ? '"'+v.replace(/"/g,'""')+'"' : v; }
+function exportMetaCSV(){
+  const clients=Object.values(state.clients);
+  const withPhone=clients.filter(c=>sanitizeClient(c.phone));
+  const skipped=clients.length-withPhone.length;
+  if(withPhone.length===0){ showToast("Aucun client avec numéro valide à exporter"); return; }
+  const rows=withPhone.map(c=>{
+    const phone="+"+sanitizeClient(c.phone);
+    const name=(c.name||"").trim();
+    const sp=name.split(/\s+/);
+    const fn=sp[0]||"";
+    const ln=sp.slice(1).join(" ")||"";
+    return [phone, fn, ln];
+  });
+  const BATCH=10000;
+  const nBatches=Math.max(1,Math.ceil(rows.length/BATCH));
+  for(let i=0;i<nBatches;i++){
+    const chunk=rows.slice(i*BATCH,(i+1)*BATCH);
+    const lines=[["phone","fn","ln"], ...chunk].map(r=>r.map(metaCsvCell).join(","));
+    const csv=lines.join("\r\n");
+    const suffix=nBatches>1?("-lot"+(i+1)+"sur"+nBatches):"";
+    downloadFile("bk-meta-audience"+suffix+"-"+dateStamp()+".csv", csv, "text/csv;charset=utf-8");
+  }
+  showToast("✓ Export Meta : "+rows.length+" contact(s)"+(nBatches>1?" en "+nBatches+" fichiers":"")+(skipped?" · "+skipped+" sans numéro ignoré(s)":""));
 }
 
 /* ---------------- Init ---------------- */
@@ -2006,6 +2174,15 @@ function init(){
   document.getElementById('statsClose').addEventListener('click',closeStats);
   document.getElementById('statsOv').addEventListener('click',e=>{ if(e.target.id==='statsOv') closeStats(); });
 
+  // Paramètres (code de sécurité)
+  document.getElementById('settingsBtn').addEventListener('click',openSettings);
+  document.getElementById('settingsClose').addEventListener('click',closeSettings);
+  document.getElementById('settingsOv').addEventListener('click',e=>{ if(e.target.id==='settingsOv') closeSettings(); });
+  document.getElementById('settingsSave').addEventListener('click',saveSettings);
+  ['set-old','set-new1','set-new2'].forEach(id=>document.getElementById(id).addEventListener('input',()=>{
+    const el=document.getElementById(id); const d=el.value.replace(/\D/g,"").slice(0,4); if(el.value!==d) el.value=d;
+  }));
+
   updateBackupNag();
 
   setPhoneMode("cd");
@@ -2022,6 +2199,8 @@ function init(){
   ['cliSearch','cliCommune','cliType','cliSort'].forEach(id=>
     document.getElementById(id).addEventListener('input',renderClients));
   document.getElementById('cliExportBtn').addEventListener('click',exportClientsCSV);
+  document.getElementById('cliMetaBtn').addEventListener('click',exportMetaCSV);
+  document.getElementById('cliRevBox').addEventListener('click',toggleRevenue);
   document.getElementById('cliExpDataBtn').addEventListener('click',exportClientsData);
   document.getElementById('cliImpDataBtn').addEventListener('click',()=>document.getElementById('cliImportInput').click());
   document.getElementById('cliImportInput').addEventListener('change',e=>{
@@ -2030,6 +2209,7 @@ function init(){
 
   refreshForm();
 }
+initLock();
 init();
 
 // Service worker — rend l'app installable et utilisable hors connexion
