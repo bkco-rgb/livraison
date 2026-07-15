@@ -347,6 +347,12 @@
   /* ---------- Revenu cumulé masqué ---------- */
   .cli-rev-box{cursor:pointer;user-select:none}
   .cli-rev-box span{display:flex;align-items:center;justify-content:center;gap:3px}
+
+  /* ---------- Ajout d'un ancien client ---------- */
+  .oldcli-btn{width:100%;margin-bottom:12px;background:var(--ink);color:#fff;font-family:var(--font-d);font-weight:600;font-size:14.5px;padding:13px;border-radius:11px;display:flex;align-items:center;justify-content:center;gap:9px;transition:transform .08s}
+  .oldcli-btn:active{transform:scale(.985)}
+  .oldcli-intro{font-size:12px;color:var(--ink-faint);text-align:center;margin:-4px 0 14px;line-height:1.5}
+  .oc-badge{background:#F0F1F4;color:var(--ink-soft);font-size:11px;font-weight:600;border-radius:6px;padding:2px 8px}
 </style>
 </head>
 <body>
@@ -532,6 +538,11 @@
         <div><b id="cliLoyal">0</b><span>fidèles (2+)</span></div>
         <div class="cli-rev-box" id="cliRevBox"><b id="cliRevenue">••••</b><span>🔒 cumulé</span></div>
       </div>
+      <button type="button" class="oldcli-btn" id="oldCliBtn">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 7.5a2.75 2.75 0 100-5.5 2.75 2.75 0 000 5.5zM1.8 13c.3-2.4 2.2-4 4.2-4s3.9 1.6 4.2 4M11.5 4.5v4M13.5 6.5h-4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Ajouter un ancien client
+      </button>
+      <div class="oldcli-intro">Pour les clientes livrées avant l'appli — sans créer de livraison en cours.</div>
       <input type="text" id="cliSearch" placeholder="Rechercher un nom ou un numéro…">
       <div class="cli-row">
         <select id="cliCommune"><option value="">Toutes communes</option></select>
@@ -642,6 +653,81 @@
     </div>
     <div class="m-hint" id="set-hint">Le code est demandé à chaque ouverture de l'application, et pour afficher le montant cumulé de la base clients.</div>
     <button class="m-save" id="settingsSave">Enregistrer le nouveau code</button>
+  </div>
+</div>
+
+<!-- ====== Modale : ajouter un ancien client ====== -->
+<div class="modal-ov" id="oldCliOv">
+  <div class="modal">
+    <h3><span>🕓 Ajouter un ancien client</span><button class="m-close" id="oldCliClose">✕</button></h3>
+    <div class="m-hint" style="margin:-8px 0 12px">Pour une cliente livrée avant l'appli. Ceci met à jour sa fiche dans la Base clients uniquement — aucune livraison n'est créée, et les Statistiques par zone/jour ne sont pas modifiées.</div>
+
+    <div class="m-field">
+      <label>Nom du client <span style="text-transform:none;font-weight:500">(facultatif)</span></label>
+      <input type="text" id="oc-name" placeholder="Laisser vide si inconnu" autocomplete="off">
+    </div>
+
+    <div class="m-field">
+      <label>Téléphone <span style="text-transform:none;font-weight:500">(facultatif)</span></label>
+      <div class="phone-mode" id="ocPhoneMode">
+        <button type="button" class="pm-opt sel" data-pm="cd">🇨🇩 Congolais</button>
+        <button type="button" class="pm-opt" data-pm="intl">🌍 Étranger</button>
+      </div>
+      <div class="phone-row" id="ocPhoneRowCd">
+        <span class="phone-prefix">+243</span>
+        <input type="tel" id="oc-phone" inputmode="numeric" maxlength="9" placeholder="9 chiffres (ex. 815000000)" autocomplete="off">
+      </div>
+      <div class="phone-row" id="ocPhoneRowIntl" style="display:none">
+        <input type="tel" id="oc-indicatif" class="phone-cc" inputmode="numeric" maxlength="4" placeholder="indicatif" autocomplete="off">
+        <input type="tel" id="oc-phone-intl" inputmode="numeric" maxlength="13" placeholder="numéro" autocomplete="off">
+      </div>
+      <div class="phone-hint" id="ocPhoneHint"></div>
+      <div class="m-hint">Un numéro déjà connu dans la base fusionne automatiquement avec la fiche existante (la fidélité s'additionne, rien n'est dupliqué).</div>
+    </div>
+
+    <div class="m-field">
+      <label>Commune</label>
+      <select id="oc-commune"><option value="" disabled selected>Choisir…</option></select>
+    </div>
+
+    <div class="m-field">
+      <label>Adresse <span style="text-transform:none;font-weight:500">(facultatif)</span></label>
+      <input type="text" id="oc-address" placeholder="Ex. av/ Tabora 14, près du marché" autocomplete="off">
+    </div>
+
+    <div class="m-row">
+      <div class="m-field">
+        <label>Quantité par commande</label>
+        <input type="number" id="oc-qty" min="1" step="1" value="1">
+      </div>
+      <div class="m-field">
+        <label>Type</label>
+        <select id="oc-type">
+          <option value="standard">Standard — 15$</option>
+          <option value="premium">Premium — 18$</option>
+          <option value="special">Spécial — montant libre</option>
+        </select>
+      </div>
+    </div>
+    <div class="m-field" id="oc-special-wrap" style="display:none">
+      <label>Montant spécial par commande ($)</label>
+      <input type="number" id="oc-special" min="0" step="0.5" inputmode="decimal">
+    </div>
+
+    <div class="m-field">
+      <label>Nombre de commandes passées</label>
+      <input type="number" id="oc-count" min="1" step="1" value="1">
+      <div class="m-hint">Si elle a commandé plusieurs fois avant l'appli, augmente ce nombre — chaque commande compte pour sa fidélité.</div>
+    </div>
+
+    <div class="m-field">
+      <label>Date approximative <span style="text-transform:none;font-weight:500">(facultatif)</span></label>
+      <input type="date" id="oc-date">
+      <div class="m-hint">Sert juste au classement interne, n'apparaît nulle part ailleurs (ni livraisons, ni statistiques).</div>
+    </div>
+
+    <div class="m-total"><span>Total à ajouter <span class="oc-badge" id="oc-count-badge">1 commande</span></span><b id="oc-total">—</b></div>
+    <button class="m-save" id="oldCliSave">Ajouter à la base clients</button>
   </div>
 </div>
 
@@ -892,8 +978,7 @@ function setMode(m){
   refreshForm();
 }
 
-function fillCommunes(){
-  const sel=document.getElementById('f-commune');
+function fillCommuneOptions(sel){
   Object.keys(ZONES).forEach(z=>{
     const og=document.createElement('optgroup'); og.label=ZONES[z].label;
     ZONES[z].communes.slice().sort((a,b)=>a.localeCompare(b,'fr')).forEach(c=>{
@@ -901,6 +986,9 @@ function fillCommunes(){
     });
     sel.appendChild(og);
   });
+}
+function fillCommunes(){
+  fillCommuneOptions(document.getElementById('f-commune'));
 }
 
 function getZoneFromForm(){
@@ -946,7 +1034,7 @@ function phoneConflict(value, ignoreId){
 let phoneMode = "cd";   // "cd" | "intl"
 function setPhoneMode(m){
   phoneMode=m;
-  document.querySelectorAll('.pm-opt').forEach(b=>b.classList.toggle('sel',b.dataset.pm===m));
+  document.querySelectorAll('#phoneMode .pm-opt').forEach(b=>b.classList.toggle('sel',b.dataset.pm===m));
   document.getElementById('phoneRowCd').style.display  = m==="cd"   ? "" : "none";
   document.getElementById('phoneRowIntl').style.display= m==="intl" ? "" : "none";
   refreshForm();
@@ -1902,6 +1990,100 @@ function saveSettings(){
   showToast("✓ Code de sécurité modifié");
 }
 
+/* ---------------- Ajouter un ancien client (Base clients uniquement) ---------------- */
+let ocPhoneMode = "cd";   // "cd" | "intl"
+function setOcPhoneMode(m){
+  ocPhoneMode=m;
+  document.querySelectorAll('#ocPhoneMode .pm-opt').forEach(b=>b.classList.toggle('sel',b.dataset.pm===m));
+  document.getElementById('ocPhoneRowCd').style.display  = m==="cd"   ? "" : "none";
+  document.getElementById('ocPhoneRowIntl').style.display= m==="intl" ? "" : "none";
+  refreshOldClient();
+}
+function ocPhoneStatus(){
+  if(ocPhoneMode==="cd"){
+    const d=document.getElementById('oc-phone').value.replace(/\D/g,"");
+    if(d.length===0) return {valid:true, value:""};
+    if(d.length===9) return {valid:true, value:"+243"+d};
+    return {valid:false, value:"", hint:"Numéro congolais = 9 chiffres ("+d.length+"/9)"};
+  }else{
+    const cc=document.getElementById('oc-indicatif').value.replace(/\D/g,"");
+    const num=document.getElementById('oc-phone-intl').value.replace(/\D/g,"");
+    if(cc.length===0 && num.length===0) return {valid:true, value:""};
+    if(cc.length>=1 && num.length>=4) return {valid:true, value:"+"+cc+num};
+    return {valid:false, value:"", hint:"Indicatif + numéro requis (ex. +33 et 6 chiffres ou plus)"};
+  }
+}
+function ocOrderTotal(){
+  const qty=Math.max(1,parseInt(document.getElementById('oc-qty').value||"1",10));
+  const ty=document.getElementById('oc-type').value;
+  if(ty==="special") return parseFloat(document.getElementById('oc-special').value||"0")||0;
+  return PRICE[ty]*qty;
+}
+function refreshOldClient(){
+  const ty=document.getElementById('oc-type').value;
+  document.getElementById('oc-special-wrap').style.display = ty==="special" ? "" : "none";
+  const perOrder=ocOrderTotal();
+  const count=Math.max(1,parseInt(document.getElementById('oc-count').value||"1",10));
+  document.getElementById('oc-count-badge').textContent = count+" commande"+(count>1?"s":"");
+  document.getElementById('oc-total').textContent = fmt(perOrder*count);
+  const ph=ocPhoneStatus();
+  const hint=document.getElementById('ocPhoneHint');
+  hint.textContent = ph.valid ? "" : (ph.hint||"");
+  hint.style.color = "var(--danger)";
+}
+function openOldClient(){
+  document.getElementById('oc-name').value="";
+  document.getElementById('oc-phone').value="";
+  document.getElementById('oc-indicatif').value="";
+  document.getElementById('oc-phone-intl').value="";
+  setOcPhoneMode("cd");
+  const sel=document.getElementById('oc-commune');
+  if(sel.options.length<=1) fillCommuneOptions(sel);
+  sel.value="";
+  document.getElementById('oc-address').value="";
+  document.getElementById('oc-qty').value="1";
+  document.getElementById('oc-type').value="standard";
+  document.getElementById('oc-special').value="";
+  document.getElementById('oc-count').value="1";
+  document.getElementById('oc-date').value=localISO(new Date());
+  refreshOldClient();
+  document.getElementById('oldCliOv').classList.add('open');
+}
+function closeOldClient(){ document.getElementById('oldCliOv').classList.remove('open'); }
+function saveOldClient(){
+  const name=document.getElementById('oc-name').value.trim();
+  const ph=ocPhoneStatus();
+  if(!ph.valid){ showToast(ph.hint||"Téléphone invalide"); return; }
+  if(!name && !ph.value){ showToast("Indique au moins un nom ou un numéro de téléphone"); return; }
+  const commune=document.getElementById('oc-commune').value;
+  if(!commune){ showToast("Choisis la commune du client"); return; }
+  const zone=COMMUNE_ZONE[commune];
+  const address=document.getElementById('oc-address').value.trim();
+  const qty=Math.max(1,parseInt(document.getElementById('oc-qty').value||"1",10));
+  const type=document.getElementById('oc-type').value;
+  const perOrderTotal=ocOrderTotal();
+  if(type==="special" && perOrderTotal<=0){ showToast("Indique le montant spécial par commande"); return; }
+  const count=Math.max(1,parseInt(document.getElementById('oc-count').value||"1",10));
+  const dateVal=document.getElementById('oc-date').value;
+  const deliveredAt = dateVal ? new Date(dateVal+"T12:00:00").toISOString() : new Date().toISOString();
+
+  // Chaque « commande passée » est ajoutée une par une à la Base clients avec le
+  // même moteur que les vraies livraisons (fusion automatique par téléphone,
+  // fidélité qui s'additionne). Volontairement PAS de statAdd() : ces entrées
+  // historiques ne touchent jamais les Statistiques par zone/jour, et rien n'est
+  // écrit dans state.orders (pas de livraison en attente, pas de code, pas de
+  // liste WhatsApp/impression).
+  for(let i=0;i<count;i++){
+    applyToBase({ phone:ph.value, name, zone, commune, address, qty, type, total:perOrderTotal, deliveredAt }, +1);
+  }
+  saveState();
+  updateClientsCount();
+  if(document.getElementById('page-cli').style.display!=="none") renderClients();
+  closeOldClient();
+  const who = name || ph.value || "ce client";
+  showToast("✓ "+count+" commande"+(count>1?"s":"")+" ajoutée"+(count>1?"s":"")+" à la fiche de "+who);
+}
+
 /* ---------------- Onglets & base clients ---------------- */
 let curZonePage=null;
 function setTab(t){
@@ -2000,7 +2182,7 @@ function renderClients(){
   const list=clientList();
   const box=document.getElementById('cliList');
   if(all.length===0){
-    box.innerHTML=`<div class="cl-empty"><b>Base vide pour l'instant</b>Coche une commande comme « livrée » et le client apparaîtra ici.</div>`;
+    box.innerHTML=`<div class="cl-empty"><b>Base vide pour l'instant</b>Coche une commande comme « livrée », ou ajoute un ancien client ci-dessus.</div>`;
     return;
   }
   if(list.length===0){ box.innerHTML=`<div class="cl-empty">Aucun client ne correspond à ce filtre.</div>`; return; }
@@ -2182,6 +2364,20 @@ function init(){
   ['set-old','set-new1','set-new2'].forEach(id=>document.getElementById(id).addEventListener('input',()=>{
     const el=document.getElementById(id); const d=el.value.replace(/\D/g,"").slice(0,4); if(el.value!==d) el.value=d;
   }));
+
+  // Modale : ajouter un ancien client
+  document.getElementById('oldCliBtn').addEventListener('click',openOldClient);
+  document.getElementById('oldCliClose').addEventListener('click',closeOldClient);
+  document.getElementById('oldCliOv').addEventListener('click',e=>{ if(e.target.id==='oldCliOv') closeOldClient(); });
+  document.getElementById('oldCliSave').addEventListener('click',saveOldClient);
+  document.getElementById('ocPhoneMode').addEventListener('click',e=>{
+    const b=e.target.closest('.pm-opt'); if(b)setOcPhoneMode(b.dataset.pm);
+  });
+  ['oc-phone','oc-indicatif','oc-phone-intl'].forEach(id=>
+    document.getElementById(id).addEventListener('input',()=>{ digitsOnly(id); refreshOldClient(); }));
+  document.getElementById('oc-type').addEventListener('change',refreshOldClient);
+  ['oc-qty','oc-special','oc-count'].forEach(id=>
+    document.getElementById(id).addEventListener('input',refreshOldClient));
 
   updateBackupNag();
 
