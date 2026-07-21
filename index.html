@@ -84,6 +84,7 @@
   .commune-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 12px;background:#F8F9FB;border:1px solid var(--line);border-radius:10px}
   .commune-row .cr-name{font-weight:600;font-size:13.5px}
   .commune-row select{width:auto;min-width:170px;padding:7px 30px 7px 10px;font-size:12.5px}
+  .commune-row .cr-fee{width:64px;flex:none;padding:7px 8px;font-size:12.5px;text-align:center}
   .cr-del{flex:none;width:26px;height:26px;border-radius:50%;border:1px solid var(--line);background:#fff;color:var(--ink-faint);font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center}
   .cr-del:hover{border-color:var(--danger);color:var(--danger)}
   .color-swatch-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
@@ -130,6 +131,8 @@
   .cl-side{display:flex;flex-direction:column;align-items:flex-end;gap:8px;flex:0 0 auto}
   .cl-total{font-family:var(--font-d);font-weight:700;font-size:16px}
   .cl-wa{background:#25D366;color:#0A3D22;font-weight:700;font-size:12px;padding:8px 10px;border-radius:9px;display:flex;align-items:center;gap:6px}
+  .icon-btn.recap:hover{border-color:#25D366;color:#0A9B4A}
+  .icon-btn.recap:disabled{opacity:.35;cursor:not-allowed}
   .cl-wa:active{transform:scale(.96)}
   .cl-empty{padding:34px 16px;text-align:center;color:var(--ink-faint);font-size:13.5px}
   .cl-empty b{display:block;font-family:var(--font-d);color:var(--ink-soft);font-size:15px;margin-bottom:4px}
@@ -832,26 +835,68 @@ const PRICE = {standard:15, premium:18};
 const MESSAGES_KEY = "bkpc_messages_v1";
 const DEFAULT_MESSAGES = {
   abandoned: "Bonjour {nom}, vous aviez commandé une pochette chez BK Pochette Congo — êtes-vous toujours intéressée ?",
-  loyalty: "Bonjour {nom}, merci pour votre fidélité chez BK Pochette Congo ! 🎁"
+  loyalty: "Bonjour {nom}, merci pour votre fidélité chez BK Pochette Congo ! 🎁",
+  recap: "Bonjour {nom}, nous espérons que vous allez bien. Voici le récapitulatif de votre commande chez BK Pochette Congo :\n\n📦 Étiquette : *{code}*\n💰 Prix : *{prix}*\n🚚 Frais de livraison : *{livraison}*\n📞 Livreur : numéro se terminant par *{livreur4}*\n\nVotre commande est enregistrée, la livraison est prévue aujourd'hui. Merci de votre confiance !",
+  recapApology: "\n\nToutes nos excuses pour le léger retard sur cette commande — elle sera bien livrée aujourd'hui."
 };
 function loadMessagesFromStorage(){
   try{
     const raw=localStorage.getItem(MESSAGES_KEY);
-    if(raw){ const p=JSON.parse(raw); return { abandoned:p.abandoned||DEFAULT_MESSAGES.abandoned, loyalty:p.loyalty||DEFAULT_MESSAGES.loyalty }; }
+    if(raw){
+      const p=JSON.parse(raw);
+      return { abandoned:p.abandoned||DEFAULT_MESSAGES.abandoned, loyalty:p.loyalty||DEFAULT_MESSAGES.loyalty,
+        recap:p.recap||DEFAULT_MESSAGES.recap, recapApology:p.recapApology||DEFAULT_MESSAGES.recapApology };
+    }
   }catch(e){}
-  return { abandoned:DEFAULT_MESSAGES.abandoned, loyalty:DEFAULT_MESSAGES.loyalty };
+  return { abandoned:DEFAULT_MESSAGES.abandoned, loyalty:DEFAULT_MESSAGES.loyalty, recap:DEFAULT_MESSAGES.recap, recapApology:DEFAULT_MESSAGES.recapApology };
 }
 function saveMessagesToStorage(){
   try{ localStorage.setItem(MESSAGES_KEY, JSON.stringify(MESSAGES)); }catch(e){}
 }
 let MESSAGES = loadMessagesFromStorage();
+function fillTemplate(tpl, vars){
+  let out=tpl||"";
+  Object.keys(vars).forEach(k=>{ out=out.replace(new RegExp("\\{"+k+"\\}","g"), vars[k]); });
+  return out;
+}
 function fillMessage(tpl, name){
-  const n=(name||"").trim();
-  return (tpl||"").replace(/\{nom\}/g, n || "chère cliente");
+  return fillTemplate(tpl, { nom: (name||"").trim() || "chère cliente" });
 }
 function waLink(phone, tpl, name){
   return "https://wa.me/"+phone+"?text="+encodeURIComponent(fillMessage(tpl, name));
 }
+// 4 derniers chiffres visibles seulement, pour ne pas exposer le numéro complet du livreur.
+function lastFourMasked(phone){
+  const digits=(phone||"").replace(/\D/g,"");
+  const local=digits.startsWith("243")?digits.slice(3):digits;
+  const last4=local.slice(-4)||"????";
+  return "+243 XXXXX"+last4;
+}
+function recapMessage(o){
+  const vars={
+    nom: o.name || "chère cliente",
+    code: o.code,
+    prix: fmt(o.total),
+    livraison: fmtFC(communeFee(o.commune)),
+    livreur4: lastFourMasked(ZONES[o.zone] ? ZONES[o.zone].phone : "")
+  };
+  let msg=fillTemplate(MESSAGES.recap, vars);
+  if(o.carried) msg+=fillTemplate(MESSAGES.recapApology, vars);
+  return msg;
+}
+
+/* ---------------- Frais de livraison par commune (modifiables dans Paramètres) ---------------- */
+const FEES_KEY = "bkpc_fees_v1";
+function loadFeesFromStorage(){
+  try{ const raw=localStorage.getItem(FEES_KEY); if(raw){ const p=JSON.parse(raw); if(p && typeof p==="object") return p; } }catch(e){}
+  return {};
+}
+function saveFeesToStorage(){
+  try{ localStorage.setItem(FEES_KEY, JSON.stringify(COMMUNE_FEES)); }catch(e){}
+}
+let COMMUNE_FEES = loadFeesFromStorage();
+function communeFee(commune){ return COMMUNE_FEES[commune]||0; }
+
 
 /* ---------------- État + stockage ---------------- */
 const STORE_KEY = "bkpc_state_v1";
@@ -1282,6 +1327,7 @@ function refreshForm(){
   document.getElementById('addBtn').disabled=!ok;
 }
 function fmt(n){ const v=Math.round(n*100)/100; return (Number.isInteger(v)?v:v.toFixed(2))+"$"; }
+function fmtFC(n){ const v=Math.round(n||0); return v.toLocaleString('fr-FR')+" FC"; }
 function addrText(o){
   if(o.address) return o.address;            // nouveau format
   const parts=[];                            // anciens enregistrements
@@ -1580,6 +1626,9 @@ function orderHTML(o){
         <button class="icon-btn check ${o.done?'on':''}" data-check="${o.id}" title="Marquer livré">
           <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M3 8.5l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
+        <button class="icon-btn recap" data-recap="${o.id}" title="Envoyer le récap au client" ${sanitizeClient(o.phone)?'':'disabled'}>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 00-8.5 15.3L2 22l4.8-1.5A10 10 0 1012 2zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.5-3.9-4.7-4.1-.1-.2-1-1.4-1-2.6 0-1.2.6-1.8.9-2.1.2-.2.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.3 0 .5l-.4.6c-.2.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.4 2.4 1.5.2.1.4.1.5-.1l.7-.9c.2-.2.3-.2.6-.1l1.9.9c.3.1.5.2.5.3.1.2.1.6 0 1z"/></svg>
+        </button>
         <button class="icon-btn edit" data-edit="${o.id}" title="Modifier la commande">
           <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M11.3 2.7a1.5 1.5 0 012.1 2.1L5.5 12.7 2.5 13.5l.8-3L11.3 2.7z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
         </button>
@@ -1866,6 +1915,13 @@ function bindZoneEvents(){
       saveState(); render(); updateClientsCount(); refreshOpenZone();
       if(document.getElementById('page-cli').style.display!=="none") renderClients();
     }
+  });
+  document.querySelectorAll('[data-recap]').forEach(b=>b.onclick=()=>{
+    const o=state.orders.find(o=>o.id===b.dataset.recap);
+    if(!o) return;
+    const wc=sanitizeClient(o.phone);
+    if(!wc){ showToast("Pas de numéro pour ce client"); return; }
+    window.open("https://wa.me/"+wc+"?text="+encodeURIComponent(recapMessage(o)), "_blank");
   });
   document.querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>openEdit(b.dataset.edit));
   document.querySelectorAll('[data-postpone]').forEach(b=>b.onclick=()=>openPostpone(b.dataset.postpone));
@@ -2378,6 +2434,8 @@ function deleteCommune(name){
   if(!zone) return;
   if(!confirm("Retirer « "+name+" » de la liste ? Les commandes déjà enregistrées avec cette commune ne changent pas.")) return;
   ZONES[zone].communes=ZONES[zone].communes.filter(c=>c!==name);
+  delete COMMUNE_FEES[name];
+  saveFeesToStorage();
   saveZonesToStorage();
   rebuildCommuneZone();
   refreshAllCommuneSelects();
@@ -2424,7 +2482,7 @@ function renderSettingsPage(){
     const opts=Object.keys(ZONES).map(z=>
       `<option value="${z}" ${z===curZone?'selected':''}>${esc(ZONES[z].label)} · ${esc(ZONES[z].name)}</option>`
     ).join("");
-    return `<div class="commune-row"><span class="cr-name">${esc(c)}</span><select data-commune="${esc(c)}">${opts}</select><button type="button" class="cr-del" data-delcommune="${esc(c)}" title="Retirer cette commune">✕</button></div>`;
+    return `<div class="commune-row"><span class="cr-name">${esc(c)}</span><input type="number" class="cr-fee" data-feecommune="${esc(c)}" value="${communeFee(c)}" min="0" step="100" placeholder="Frais FC" title="Frais de livraison (FC)"><select data-commune="${esc(c)}">${opts}</select><button type="button" class="cr-del" data-delcommune="${esc(c)}" title="Retirer cette commune">✕</button></div>`;
   }).join("");
 
   const availColors=availableColorKeys();
@@ -2456,9 +2514,18 @@ function renderSettingsPage(){
         <label>Message — clients abandonnés</label>
         <textarea data-msgfield="abandoned" rows="3">${esc(MESSAGES.abandoned)}</textarea>
       </div>
-      <div class="m-field" style="margin-bottom:2px">
+      <div class="m-field">
         <label>Message — fidélité / promotion</label>
         <textarea data-msgfield="loyalty" rows="3">${esc(MESSAGES.loyalty)}</textarea>
+      </div>
+      <div class="m-field">
+        <label>Message — récapitulatif de commande</label>
+        <textarea data-msgfield="recap" rows="6">${esc(MESSAGES.recap)}</textarea>
+        <div class="m-hint">Variables disponibles : {nom} {code} {prix} {livraison} {livreur4}</div>
+      </div>
+      <div class="m-field" style="margin-bottom:2px">
+        <label>Note d'excuse — ajoutée automatiquement si la commande vient d'hier</label>
+        <textarea data-msgfield="recapApology" rows="2">${esc(MESSAGES.recapApology)}</textarea>
       </div>
     </section>
 
@@ -2483,6 +2550,16 @@ function renderSettingsPage(){
       saveZonesToStorage();
       render();
       showToast("Zone "+z+" mise à jour");
+    });
+  });
+
+  page.querySelectorAll('[data-feecommune]').forEach(inp=>{
+    inp.addEventListener('change',()=>{
+      const commune=inp.dataset.feecommune;
+      const val=Math.max(0, Math.round(parseFloat(inp.value||"0")||0));
+      COMMUNE_FEES[commune]=val;
+      saveFeesToStorage();
+      showToast("Frais de "+commune+" : "+fmtFC(val));
     });
   });
 
