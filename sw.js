@@ -3,7 +3,7 @@
 // pour que tu voies immédiatement chaque mise à jour poussée sur GitHub, sans devoir
 // changer CACHE à la main. Le cache sert uniquement de secours hors connexion.
 // Les icônes/manifest, qui changent rarement, restent en cache classique.
-const CACHE = "bk-pochette-v11";
+const CACHE = "bk-pochette-v12";
 const ASSETS = [
   "./",
   "./index.html",
