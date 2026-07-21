@@ -73,6 +73,22 @@
   .back-btn:active{transform:scale(.98)}
   .zone-focus-intro{font-size:13px;color:var(--ink-soft);background:var(--paper);border:1px solid var(--line);border-radius:11px;padding:12px 14px;margin-bottom:14px;line-height:1.5}
   .zone-focus-intro b{color:var(--ink)}
+
+  /* ---------- Paramètres ---------- */
+  .settings-zone-grid{display:flex;flex-direction:column;gap:12px;margin-top:8px}
+  .settings-zone-card{border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  .sz-head{padding:9px 14px;color:#fff;font-family:var(--font-d);font-weight:700;font-size:15px}
+  .sz-body{padding:12px 14px}
+  .sz-communes{font-size:12px;color:var(--ink-faint);margin-top:2px}
+  .commune-list{display:flex;flex-direction:column;gap:8px;margin-top:8px}
+  .commune-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 12px;background:#F8F9FB;border:1px solid var(--line);border-radius:10px}
+  .commune-row .cr-name{font-weight:600;font-size:13.5px}
+  .commune-row select{width:auto;min-width:170px;padding:7px 30px 7px 10px;font-size:12.5px}
+  .cr-del{flex:none;width:26px;height:26px;border-radius:50%;border:1px solid var(--line);background:#fff;color:var(--ink-faint);font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+  .cr-del:hover{border-color:var(--danger);color:var(--danger)}
+  .color-swatch-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
+  .color-swatch{width:32px;height:32px;border-radius:50%;border:2px solid transparent;cursor:pointer;padding:0}
+  .color-swatch.sel{border-color:var(--ink)}
   .report-bar{margin-top:14px}
   .report-btn{width:100%;background:var(--a);color:#fff;font-family:var(--font-d);font-weight:600;font-size:14.5px;padding:14px;border-radius:12px;display:flex;align-items:center;justify-content:center;gap:9px;box-shadow:var(--shadow)}
   .report-btn:active{transform:scale(.985)}
@@ -270,8 +286,9 @@
   .m-close{width:32px;height:32px;border-radius:9px;border:1px solid var(--line);color:var(--ink-soft);font-size:16px;display:flex;align-items:center;justify-content:center}
   .m-field{margin-bottom:11px}
   .m-field label{display:block;font-size:11.5px;font-weight:600;color:var(--ink-faint);text-transform:uppercase;letter-spacing:.4px;margin-bottom:5px}
-  .m-field input,.m-field select{width:100%;background:#F8F9FB;border:1px solid var(--line);border-radius:10px;padding:11px 12px;font-size:14.5px;color:var(--ink)}
-  .m-field input:focus,.m-field select:focus{outline:none;border-color:var(--ink);background:#fff}
+  .m-field input,.m-field select,.m-field textarea{width:100%;background:#F8F9FB;border:1px solid var(--line);border-radius:10px;padding:11px 12px;font-size:14.5px;color:var(--ink)}
+  .m-field textarea{font-family:inherit;resize:vertical;line-height:1.4}
+  .m-field input:focus,.m-field select:focus,.m-field textarea:focus{outline:none;border-color:var(--ink);background:#fff}
   .m-row{display:flex;gap:10px}
   .m-row .m-field{flex:1;min-width:0}
   .m-hint{font-size:11.5px;color:var(--ink-faint);margin-top:4px;line-height:1.4}
@@ -373,18 +390,20 @@
 </div>
 
 <header>
-  <div class="brand">
-    <div class="logo">BK</div>
-    <div>
-      <h1>Pochette Congo</h1>
-      <p>Tri &amp; livraisons par zone</p>
+  <div style="display:flex;align-items:center;gap:12px">
+    <div class="brand" style="flex:1;min-width:0">
+      <div class="logo">BK</div>
+      <div>
+        <h1>Pochette Congo</h1>
+        <p>Tri &amp; livraisons par zone</p>
+      </div>
     </div>
+    <button id="zonesSettingsBtn" title="Zones et livreurs"
+      style="width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex:none;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.09);color:#fff">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 15a3 3 0 100-6 3 3 0 000 6z" stroke="currentColor" stroke-width="1.6"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 11-4 0v-.09a1.65 1.65 0 00-1.08-1.51 1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 110-4h.09A1.65 1.65 0 004.6 9.6a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 114 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 110 4h-.09a1.65 1.65 0 00-1.51 1z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
   </div>
-  <div class="ribbon">
-    <button class="pill" data-zone="A"><span class="dot" style="background:var(--a)"></span> Zone A <b id="rA">0</b><span class="pill-go">›</span></button>
-    <button class="pill" data-zone="B"><span class="dot" style="background:var(--b)"></span> Zone B <b id="rB">0</b><span class="pill-go">›</span></button>
-    <button class="pill" data-zone="C"><span class="dot" style="background:var(--c)"></span> Zone C <b id="rC">0</b><span class="pill-go">›</span></button>
-  </div>
+  <div class="ribbon" id="zonePills"></div>
 </header>
 
 <main>
@@ -560,9 +579,18 @@
       <div class="cli-imp-hint">Le bouton Meta Ads génère un fichier phone/fn/ln prêt pour une Audience personnalisée (Facebook/Instagram). Numéros congolais formatés en +243 automatiquement. Fichier découpé en plusieurs lots si plus de 10 000 clients.</div>
     </section>
     <div id="cliList" class="cli-list"></div>
+    <section class="card" style="margin-top:14px;padding:16px">
+      <button type="button" class="oldcli-btn" id="abandonedToggleBtn" style="width:100%;justify-content:center">
+        🕊 Clients abandonnés <b id="abandonedCount">0</b>
+      </button>
+      <div class="oldcli-intro">Coordonnées gardées automatiquement quand une commande non livrée est supprimée — pour relancer plus tard. Retirée toute seule dès qu'un vrai achat est livré.</div>
+      <button class="reset-btn" id="abandonedCsvBtn" style="margin-top:8px">Excel (CSV)</button>
+      <div id="abandonedList" style="display:none;margin-top:10px"></div>
+    </section>
   </div>
 
   <div id="page-zone" style="display:none"></div>
+  <div id="page-settings" style="display:none"></div>
 </main>
 
 <!-- ====== Modale : modifier une commande ====== -->
@@ -663,6 +691,15 @@
     <div class="m-hint" style="margin:-8px 0 12px">Pour une cliente livrée avant l'appli. Ceci met à jour sa fiche dans la Base clients uniquement — aucune livraison n'est créée, et les Statistiques par zone/jour ne sont pas modifiées.</div>
 
     <div class="m-field">
+      <label>Type de fiche</label>
+      <div class="phone-mode" id="ocKindMode">
+        <button type="button" class="pm-opt sel" data-kind="real">✓ Client réel (livré)</button>
+        <button type="button" class="pm-opt" data-kind="abandoned">🕊 Abandonné (jamais reçu)</button>
+      </div>
+      <div class="m-hint" id="ocKindHint">A reçu sa commande et payé — compte dans la Base clients et sa fidélité.</div>
+    </div>
+
+    <div class="m-field">
       <label>Nom du client <span style="text-transform:none;font-weight:500">(facultatif)</span></label>
       <input type="text" id="oc-name" placeholder="Laisser vide si inconnu" autocomplete="off">
     </div>
@@ -695,29 +732,31 @@
       <input type="text" id="oc-address" placeholder="Ex. av/ Tabora 14, près du marché" autocomplete="off">
     </div>
 
-    <div class="m-row">
-      <div class="m-field">
-        <label>Quantité par commande</label>
-        <input type="number" id="oc-qty" min="1" step="1" value="1">
+    <div id="oc-order-details">
+      <div class="m-row">
+        <div class="m-field">
+          <label>Quantité par commande</label>
+          <input type="number" id="oc-qty" min="1" step="1" value="1">
+        </div>
+        <div class="m-field">
+          <label>Type</label>
+          <select id="oc-type">
+            <option value="standard">Standard — 15$</option>
+            <option value="premium">Premium — 18$</option>
+            <option value="special">Spécial — montant libre</option>
+          </select>
+        </div>
       </div>
-      <div class="m-field">
-        <label>Type</label>
-        <select id="oc-type">
-          <option value="standard">Standard — 15$</option>
-          <option value="premium">Premium — 18$</option>
-          <option value="special">Spécial — montant libre</option>
-        </select>
+      <div class="m-field" id="oc-special-wrap" style="display:none">
+        <label>Montant spécial par commande ($)</label>
+        <input type="number" id="oc-special" min="0" step="0.5" inputmode="decimal">
       </div>
-    </div>
-    <div class="m-field" id="oc-special-wrap" style="display:none">
-      <label>Montant spécial par commande ($)</label>
-      <input type="number" id="oc-special" min="0" step="0.5" inputmode="decimal">
     </div>
 
     <div class="m-field">
-      <label>Nombre de commandes passées</label>
+      <label id="oc-count-label">Nombre de commandes passées</label>
       <input type="number" id="oc-count" min="1" step="1" value="1">
-      <div class="m-hint">Si elle a commandé plusieurs fois avant l'appli, augmente ce nombre — chaque commande compte pour sa fidélité.</div>
+      <div class="m-hint" id="oc-count-hint">Si elle a commandé plusieurs fois avant l'appli, augmente ce nombre — chaque commande compte pour sa fidélité.</div>
     </div>
 
     <div class="m-field">
@@ -726,7 +765,7 @@
       <div class="m-hint">Sert juste au classement interne, n'apparaît nulle part ailleurs (ni livraisons, ni statistiques).</div>
     </div>
 
-    <div class="m-total"><span>Total à ajouter <span class="oc-badge" id="oc-count-badge">1 commande</span></span><b id="oc-total">—</b></div>
+    <div class="m-total" id="oc-total-row"><span>Total à ajouter <span class="oc-badge" id="oc-count-badge">1 commande</span></span><b id="oc-total">—</b></div>
     <button class="m-save" id="oldCliSave">Ajouter à la base clients</button>
   </div>
 </div>
@@ -735,36 +774,105 @@
 
 <script>
 /* ---------------- Données zones ---------------- */
-const ZONES = {
-  A:{label:"Zone A", name:"Ville",    phone:"+243 810427559", communes:["Gombe","Lingwala","Kinshasa","Kasa-Vubu","Ngiri-Ngiri","Barumbu","Kalamu"]},
-  B:{label:"Zone B", name:"Montagne", phone:"+243 860129801", communes:["Ngaliema","Mont-Ngafula","Selembao","Bumbu","Makala","Kintambo","Bandalungwa"]},
-  C:{label:"Zone C", name:"Tshangu",  phone:"+243 860334063", communes:["Lemba","Kisenso","N'sele","Matete","Ndjili","Maluku","Limete","Masina","Ngaba","Kimbanseke"]}
+// Palette fixe : a/b/c = couleurs actuelles inchangées. d-k = 8 options
+// proposées pour les nouvelles zones (choisies dans les Paramètres).
+const ZONE_PALETTE = {
+  a:{base:"#D97A06",tint:"#FCF0DC",deep:"#9C5704",name:"Orange"},
+  b:{base:"#0E8C7F",tint:"#DCF1EE",deep:"#0A5F56",name:"Vert"},
+  c:{base:"#C42A6B",tint:"#FBE2EC",deep:"#8E1A4B",name:"Rose"},
+  d:{base:"#2A5DC4",tint:"#E1E9FB",deep:"#1A3F8E",name:"Bleu roi"},
+  e:{base:"#7A3FC4",tint:"#EDE3FB",deep:"#532A8E",name:"Violet"},
+  f:{base:"#C49A0E",tint:"#FBF3DC",deep:"#8E6F08",name:"Or"},
+  g:{base:"#B5342A",tint:"#F9E2DE",deep:"#7E241C",name:"Brique"},
+  h:{base:"#3E7A3F",tint:"#E3F1E3",deep:"#2A5A2B",name:"Sapin"},
+  i:{base:"#4A3FA0",tint:"#E6E3F7",deep:"#332B70",name:"Indigo"},
+  j:{base:"#7A1F3F",tint:"#F3DFE7",deep:"#591530",name:"Bordeaux"},
+  k:{base:"#1F6E8C",tint:"#DCEEF3",deep:"#154D63",name:"Bleu canard"}
 };
-const COMMUNE_ZONE = {};
-Object.keys(ZONES).forEach(z=>ZONES[z].communes.forEach(c=>COMMUNE_ZONE[c]=z));
+const DEFAULT_ZONES = {
+  A:{label:"Zone A", name:"Ville",    phone:"+243 810427559", colorKey:"a", communes:["Gombe","Lingwala","Kinshasa","Kasa-Vubu","Ngiri-Ngiri","Barumbu","Kalamu"]},
+  B:{label:"Zone B", name:"Montagne", phone:"+243 860129801", colorKey:"b", communes:["Ngaliema","Mont-Ngafula","Selembao","Bumbu","Makala","Kintambo","Bandalungwa"]},
+  C:{label:"Zone C", name:"Tshangu",  phone:"+243 860334063", colorKey:"c", communes:["Lemba","Kisenso","N'sele","Matete","Ndjili","Maluku","Limete","Masina","Ngaba","Kimbanseke"]}
+};
+const ZONES_KEY = "bkpc_zones_v1";
+function loadZonesFromStorage(){
+  try{
+    const raw = localStorage.getItem(ZONES_KEY);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      if(parsed && typeof parsed==="object" && Object.keys(parsed).length) return parsed;
+    }
+  }catch(e){}
+  return JSON.parse(JSON.stringify(DEFAULT_ZONES));
+}
+function saveZonesToStorage(){
+  try{ localStorage.setItem(ZONES_KEY, JSON.stringify(ZONES)); }catch(e){}
+}
+let ZONES = loadZonesFromStorage();
+let COMMUNE_ZONE = {};
+function rebuildCommuneZone(){
+  COMMUNE_ZONE = {};
+  Object.keys(ZONES).forEach(z=>ZONES[z].communes.forEach(c=>COMMUNE_ZONE[c]=z));
+}
+rebuildCommuneZone();
+function zonePalette(z){ return ZONE_PALETTE[(ZONES[z]&&ZONES[z].colorKey)||"a"]; }
+function nextZoneLetter(){
+  const used = Object.keys(ZONES);
+  for(let i=0;i<26;i++){ const L=String.fromCharCode(65+i); if(!used.includes(L)) return L; }
+  return null;
+}
+function availableColorKeys(){
+  const used = new Set(Object.keys(ZONES).map(z=>ZONES[z].colorKey));
+  const free = Object.keys(ZONE_PALETTE).filter(k=>!used.has(k));
+  return free.length ? free : Object.keys(ZONE_PALETTE);
+}
 const PRICE = {standard:15, premium:18};
-const ZONE_VAR = {A:"--a",B:"--b",C:"--c"};
+
+/* ---------------- Messages WhatsApp (modifiables dans Paramètres) ---------------- */
+const MESSAGES_KEY = "bkpc_messages_v1";
+const DEFAULT_MESSAGES = {
+  abandoned: "Bonjour {nom}, vous aviez commandé une pochette chez BK Pochette Congo — êtes-vous toujours intéressée ?",
+  loyalty: "Bonjour {nom}, merci pour votre fidélité chez BK Pochette Congo ! 🎁"
+};
+function loadMessagesFromStorage(){
+  try{
+    const raw=localStorage.getItem(MESSAGES_KEY);
+    if(raw){ const p=JSON.parse(raw); return { abandoned:p.abandoned||DEFAULT_MESSAGES.abandoned, loyalty:p.loyalty||DEFAULT_MESSAGES.loyalty }; }
+  }catch(e){}
+  return { abandoned:DEFAULT_MESSAGES.abandoned, loyalty:DEFAULT_MESSAGES.loyalty };
+}
+function saveMessagesToStorage(){
+  try{ localStorage.setItem(MESSAGES_KEY, JSON.stringify(MESSAGES)); }catch(e){}
+}
+let MESSAGES = loadMessagesFromStorage();
+function fillMessage(tpl, name){
+  const n=(name||"").trim();
+  return (tpl||"").replace(/\{nom\}/g, n || "chère cliente");
+}
+function waLink(phone, tpl, name){
+  return "https://wa.me/"+phone+"?text="+encodeURIComponent(fillMessage(tpl, name));
+}
 
 /* ---------------- État + stockage ---------------- */
 const STORE_KEY = "bkpc_state_v1";
 const BACKUP_KEY = "bkpc_last_backup";
 const PIN_KEY = "bkpc_pin";
 const UNLOCK_KEY = "bkpc_unlocked";
-let state = { orders:[], clients:{}, stats:{} };
+let state = { orders:[], clients:{}, stats:{}, abandoned:{} };
 let memoryOnly = false;
 let revenueVisible = false;
 
 function loadState(){
   try{
     const raw = localStorage.getItem(STORE_KEY);
-    if(raw){ const p = JSON.parse(raw); state.orders = p.orders||[]; state.clients = p.clients||{}; state.stats = p.stats||{}; }
+    if(raw){ const p = JSON.parse(raw); state.orders = p.orders||[]; state.clients = p.clients||{}; state.stats = p.stats||{}; state.abandoned = p.abandoned||{}; }
   }catch(e){
     memoryOnly = true;
   }
 }
 function saveState(){
   try{
-    localStorage.setItem(STORE_KEY, JSON.stringify({orders:state.orders, clients:state.clients, stats:state.stats}));
+    localStorage.setItem(STORE_KEY, JSON.stringify({orders:state.orders, clients:state.clients, stats:state.stats, abandoned:state.abandoned}));
     if(memoryOnly){ memoryOnly=false; updateStoreNote(); }
   }catch(e){
     memoryOnly = true; updateStoreNote();
@@ -873,6 +981,42 @@ function applyToBase(o, sign){
   }
   if(c.orders<=0) delete state.clients[key];
 }
+// Archive les coordonnées d'une commande NON livrée qu'on supprime (abandon),
+// au lieu de les perdre. Fusionne par client comme la base clients normale.
+function archiveAbandoned(o){
+  const key=clientKey(o.phone, o.name, o.zone);
+  if(!key) return;
+  let a=state.abandoned[key];
+  if(!a){ a={key, phone:o.phone||"", name:o.name||"", noPhone:!sanitizeClient(o.phone), communes:{}, types:{}, count:0, lastDate:null}; state.abandoned[key]=a; }
+  a.count++;
+  a.lastDate=new Date().toISOString();
+  if(o.name) a.name=o.name;
+  if(sanitizeClient(o.phone)){ a.phone=o.phone; a.noPhone=false; }
+  if(o.commune) a.communes[o.commune]=(a.communes[o.commune]||0)+1;
+  const ty=o.type||'standard'; a.types[ty]=(a.types[ty]||0)+1;
+}
+// Retire un client de la liste "abandonnés" dès qu'il complète une vraie livraison.
+function removeFromAbandoned(o){
+  const key=clientKey(o.phone, o.name, o.zone);
+  if(key && state.abandoned[key]) delete state.abandoned[key];
+}
+function mergeAbandoned(incoming){
+  const report={added:0, updated:0};
+  if(!incoming) return report;
+  Object.keys(incoming).forEach(k=>{
+    const inc=incoming[k]; if(!inc) return;
+    const cur=state.abandoned[k];
+    if(!cur){ state.abandoned[k]=inc; report.added++; return; }
+    cur.count=(cur.count||0)+(inc.count||0);
+    if(inc.lastDate && (!cur.lastDate || inc.lastDate>cur.lastDate)) cur.lastDate=inc.lastDate;
+    if(!sanitizeClient(cur.phone) && sanitizeClient(inc.phone)){ cur.phone=inc.phone; cur.noPhone=false; }
+    if(!cur.name && inc.name) cur.name=inc.name;
+    Object.keys(inc.communes||{}).forEach(cm=>{ cur.communes[cm]=(cur.communes[cm]||0)+(inc.communes[cm]||0); });
+    Object.keys(inc.types||{}).forEach(ty=>{ cur.types[ty]=(cur.types[ty]||0)+(inc.types[ty]||0); });
+    report.updated++;
+  });
+  return report;
+}
 // Migration : les fiches créées avant cette mise à jour n'ont pas de détail par
 // jour. Leur historique passe dans « base » (bloc hérité) et le détail commence
 // à partir de maintenant. Rien n'est perdu.
@@ -925,7 +1069,7 @@ function mergeStats(incoming){
 // Importe les commandes déjà livrées non encore comptées (1er lancement / restauration)
 function migrateBase(){
   let changed=false;
-  state.orders.forEach(o=>{ if(o.done && !o.credited){ applyToBase(o,+1); statAdd(o,+1); o.credited=true; changed=true; } });
+  state.orders.forEach(o=>{ if(o.done && !o.credited){ applyToBase(o,+1); statAdd(o,+1); o.credited=true; removeFromAbandoned(o); changed=true; } });
   if(changed) saveState();
 }
 
@@ -963,7 +1107,7 @@ function ppDateLabel(iso){
 
 function parseCode(str){
   const raw=(str||"").trim().toUpperCase().replace(/\s+/g,"");
-  const m=raw.match(/^([ABC])(\d+)$/);
+  const m=raw.match(new RegExp("^("+Object.keys(ZONES).join("|")+")(\\d+)$"));
   if(!m) return null;
   return { raw:m[1]+parseInt(m[2],10), zone:m[1], num:parseInt(m[2],10) };
 }
@@ -979,6 +1123,8 @@ function setMode(m){
 }
 
 function fillCommuneOptions(sel){
+  const placeholder = sel.querySelector('option[value=""]');
+  sel.innerHTML = placeholder ? placeholder.outerHTML : "";
   Object.keys(ZONES).forEach(z=>{
     const og=document.createElement('optgroup'); og.label=ZONES[z].label;
     ZONES[z].communes.slice().sort((a,b)=>a.localeCompare(b,'fr')).forEach(c=>{
@@ -1071,8 +1217,6 @@ function clearPhoneFields(){
 function refreshForm(){
   const live=document.getElementById('zoneLive');
   const nextEl=document.getElementById('nextCode');
-  const tintMap={A:"var(--a-tint)",B:"var(--b-tint)",C:"var(--c-tint)"};
-  const deepMap={A:"var(--a-deep)",B:"var(--b-deep)",C:"var(--c-deep)"};
   const name=document.getElementById('f-name').value.trim();
   const communeZone=getZoneFromForm();
 
@@ -1114,7 +1258,7 @@ function refreshForm(){
       hint.style.color="var(--danger)";
     }else{
       const mismatch = communeZone && communeZone!==parsed.zone;
-      live.innerHTML=`<span>Reprise de</span> <span class="zbadge" style="background:${tintMap[parsed.zone]};color:${deepMap[parsed.zone]}">${parsed.raw}</span> <span>→ ${ZONES[parsed.zone].label} · ${ZONES[parsed.zone].name}</span>`
+      live.innerHTML=`<span>Reprise de</span> <span class="zbadge" style="background:${zonePalette(parsed.zone).tint};color:${zonePalette(parsed.zone).deep}">${parsed.raw}</span> <span>→ ${ZONES[parsed.zone].label} · ${ZONES[parsed.zone].name}</span>`
         + (mismatch?` <span style="color:var(--a-deep)">⚠ commune en ${ZONES[communeZone].label}</span>`:``);
       nextEl.textContent="Étiquette : "+parsed.raw;
       hint.textContent= mismatch
@@ -1126,7 +1270,7 @@ function refreshForm(){
   }else{
     if(communeZone){
       const code=nextCodeFor(communeZone);
-      live.innerHTML=`<span>Sera trié dans</span> <span class="zbadge" style="background:${tintMap[communeZone]};color:${deepMap[communeZone]}">${ZONES[communeZone].label}</span> <span>· code <b style="font-family:var(--font-d);color:${deepMap[communeZone]}">${code}</b></span>`;
+      live.innerHTML=`<span>Sera trié dans</span> <span class="zbadge" style="background:${zonePalette(communeZone).tint};color:${zonePalette(communeZone).deep}">${ZONES[communeZone].label}</span> <span>· code <b style="font-family:var(--font-d);color:${zonePalette(communeZone).deep}">${code}</b></span>`;
       nextEl.textContent="Prochain code : "+code;
     }else{
       live.innerHTML=`<span>La zone s'affiche selon la commune choisie.</span>`;
@@ -1324,10 +1468,9 @@ function renderPostponed(){
   if(list.length===0){ card.style.display="none"; return; }
   card.style.display="";
   document.getElementById('ppCount').textContent=list.length;
-  const zoneColor={A:"var(--a)",B:"var(--b)",C:"var(--c)"};
   document.getElementById('ppList').innerHTML=list.map(o=>`
     <div class="pp-row">
-      <div class="pp-code" style="background:${zoneColor[o.zone]}">${o.code}</div>
+      <div class="pp-code" style="background:${zonePalette(o.zone).base}">${o.code}</div>
       <div class="pp-main">
         <div class="pp-name">${esc(o.name)}</div>
         <div class="pp-meta">${esc(o.commune)} · ${o.qty} pochette${o.qty>1?'s':''} · ${fmt(o.total)}</div>
@@ -1359,8 +1502,9 @@ function setType(t){
 function zoneCardHTML(z){
   const orders=activeOrders(z);
   const sum=orders.reduce((s,o)=>s+(o.total||0),0);
+  const p=zonePalette(z);
   return `
-      <div class="zone-top">
+      <div class="zone-top" style="background:linear-gradient(120deg,${p.deep},${p.base})">
         <div class="row1">
           <div class="zone-letter">${z}<small>${ZONES[z].name}</small></div>
           <div class="zone-stats"><b>${orders.length} colis</b>${fmt(sum)} à encaisser</div>
@@ -1386,22 +1530,26 @@ function zoneCardHTML(z){
 }
 function render(){
   const wrap=document.getElementById('zones'); wrap.innerHTML="";
-  let counts={A:0,B:0,C:0};
+  const counts={};
   Object.keys(ZONES).forEach(z=>{
     counts[z]=activeOrders(z).length;
-    const cls={A:"za",B:"zb",C:"zc"}[z];
     const sec=document.createElement('section');
-    sec.className="zone "+cls;
+    sec.className="zone";
     sec.innerHTML=zoneCardHTML(z);
     wrap.appendChild(sec);
   });
-  document.getElementById('rA').textContent=counts.A;
-  document.getElementById('rB').textContent=counts.B;
-  document.getElementById('rC').textContent=counts.C;
+  renderZonePills(counts);
   renderPostponed();
   bindZoneEvents();
   updateBackupNag();
   refreshForm();
+}
+function renderZonePills(counts){
+  const wrap=document.getElementById('zonePills');
+  wrap.innerHTML = Object.keys(ZONES).map(z=>`
+    <button class="pill" data-zone="${z}">
+      <span class="dot" style="background:${zonePalette(z).base}"></span> Zone ${z} <b>${counts[z]||0}</b><span class="pill-go">›</span>
+    </button>`).join("");
 }
 
 function orderHTML(o){
@@ -1416,7 +1564,7 @@ function orderHTML(o){
     : "";
   return `
     <div class="order ${o.done?'done':''}" data-id="${o.id}">
-      <div class="code">${o.code}</div>
+      <div class="code" style="background:${zonePalette(o.zone).tint};color:${zonePalette(o.zone).deep}">${o.code}</div>
       <div class="o-main">
         <div class="o-name">${esc(o.name)}</div>
         <div class="o-meta">${meta}${phoneHTML}</div>
@@ -1495,7 +1643,7 @@ async function copyMessage(z){
 function zoneSheetHTML(z){
   const orders=activeOrders(z);
   const sum=orders.reduce((s,o)=>s+(o.total||0),0);
-  const accent={A:"#D97A06",B:"#0E8C7F",C:"#C42A6B"}[z];
+  const accent=zonePalette(z).base;
   const d=new Date().toLocaleDateString('fr-FR',{weekday:'long',day:'2-digit',month:'long',year:'numeric'});
   const rows=orders.map(o=>{
     let loc=esc(o.commune); const a=addrText(o); if(a)loc+=`, ${esc(a)}`;
@@ -1703,14 +1851,17 @@ function bindZoneEvents(){
   document.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{
     const o=state.orders.find(o=>o.id===b.dataset.del);
     if(o && o.credited){ applyToBase(o,-1); statAdd(o,-1); }
+    const wasAbandoned = o && !o.done;
+    if(wasAbandoned) archiveAbandoned(o);
     state.orders=state.orders.filter(o=>o.id!==b.dataset.del);
-    saveState(); render(); updateClientsCount(); refreshOpenZone(); showToast("Commande supprimée");
+    saveState(); render(); updateClientsCount(); refreshOpenZone();
+    showToast(wasAbandoned ? "Commande abandonnée — coordonnées archivées" : "Commande supprimée");
   });
   document.querySelectorAll('[data-check]').forEach(b=>b.onclick=()=>{
     const o=state.orders.find(o=>o.id===b.dataset.check);
     if(o){
       o.done=!o.done;
-      if(o.done){ o.deliveredAt=new Date().toISOString(); if(!o.credited){ applyToBase(o,+1); statAdd(o,+1); o.credited=true; } }
+      if(o.done){ o.deliveredAt=new Date().toISOString(); if(!o.credited){ applyToBase(o,+1); statAdd(o,+1); o.credited=true; } removeFromAbandoned(o); }
       else { if(o.credited){ applyToBase(o,-1); statAdd(o,-1); o.credited=false; } }
       saveState(); render(); updateClientsCount(); refreshOpenZone();
       if(document.getElementById('page-cli').style.display!=="none") renderClients();
@@ -1741,8 +1892,8 @@ function downloadFile(name,content,type){
   setTimeout(()=>{URL.revokeObjectURL(url); a.remove();},120);
 }
 function exportBackup(){
-  if(state.orders.length===0 && Object.keys(state.clients).length===0){ showToast("Rien à sauvegarder"); return; }
-  const data=JSON.stringify({app:"BK Pochette Congo",version:3,exportedAt:new Date().toISOString(),orders:state.orders,clients:state.clients,stats:state.stats||{}},null,2);
+  if(state.orders.length===0 && Object.keys(state.clients).length===0 && Object.keys(state.abandoned||{}).length===0){ showToast("Rien à sauvegarder"); return; }
+  const data=JSON.stringify({app:"BK Pochette Congo",version:3,exportedAt:new Date().toISOString(),orders:state.orders,clients:state.clients,stats:state.stats||{},abandoned:state.abandoned||{}},null,2);
   downloadFile("bk-sauvegarde-"+dateStamp()+".json",data,"application/json");
   markBackupDone();
   showToast("Sauvegarde téléchargée");
@@ -1756,7 +1907,7 @@ function markBackupDone(){
 }
 function updateBackupNag(){
   const nag=document.getElementById('backupNag'); if(!nag) return;
-  const hasData = state.orders.length>0 || Object.keys(state.clients).length>0;
+  const hasData = state.orders.length>0 || Object.keys(state.clients).length>0 || Object.keys(state.abandoned||{}).length>0;
   let last=0;
   try{ last=parseInt(localStorage.getItem(BACKUP_KEY)||"0",10)||0; }catch(e){}
   const days = last ? Math.floor((Date.now()-last)/(24*3600*1000)) : null;
@@ -1876,11 +2027,14 @@ function importBackup(file){
       const orders=Array.isArray(p)?p:(p.orders||(p.state&&p.state.orders));
       if(!Array.isArray(orders)) throw 0;
       const clients=(p&&p.clients)|| (p&&p.state&&p.state.clients) || null;
+      const abandoned=(p&&p.abandoned)|| (p&&p.state&&p.state.abandoned) || null;
       if(confirm("Remplacer les commandes actuelles par la sauvegarde ("+orders.length+" commande(s)"+(clients?", "+Object.keys(clients).length+" client(s)":"")+") ?\n\nℹ La base clients livrés sera CONSERVÉE et complétée — jamais effacée.")){
         state.orders=orders;
         const rep=mergeClients(clients); // la base clients existante n'est JAMAIS écrasée
+        mergeAbandoned(abandoned);       // idem pour la liste des clients abandonnés
         mergeStats(p&&p.stats);       // l'historique statistique est fusionné, jamais perdu
         migrateBase();                // crédite les livrées pas encore comptées
+        Object.keys(state.abandoned).forEach(k=>{ if(state.clients[k]) delete state.abandoned[k]; }); // déjà convertis ailleurs
         wakePostponed();              // les reportées dont la date est passée reviennent
         saveState(); render(); updateClientsCount();
         if(document.getElementById('page-cli').style.display!=="none") renderClients();
@@ -1915,7 +2069,8 @@ function renderStats(){
     days.push({iso,n,t,c,day});
   }
   const today=days[days.length-1];
-  const week={n:0,t:0,c:0,zones:{A:{n:0,t:0},B:{n:0,t:0},C:{n:0,t:0}}};
+  const week={n:0,t:0,c:0,zones:{}};
+  Object.keys(ZONES).forEach(z=>{ week.zones[z]={n:0,t:0}; });
   days.forEach(d=>{
     week.n+=d.n; week.t+=d.t; week.c+=d.c;
     Object.keys(d.day).forEach(z=>{ if(week.zones[z]){ week.zones[z].n+=d.day[z].n||0; week.zones[z].t+=d.day[z].t||0; } });
@@ -1923,7 +2078,6 @@ function renderStats(){
   const pending=state.orders.filter(o=>!o.done && !o.postponed).length;
   const ppCount=state.orders.filter(o=>o.postponed).length;
   const maxDay=Math.max(1,...days.map(d=>d.n));
-  const zoneColor={A:"var(--a)",B:"var(--b)",C:"var(--c)"};
   const carriedPct = week.n ? Math.round(100*week.c/week.n) : 0;
 
   let h=`
@@ -1946,12 +2100,12 @@ function renderStats(){
     });
     h+=`<div class="st-sec">Par zone (7 jours)</div>`;
     const maxZ=Math.max(1,...Object.values(week.zones).map(z=>z.n));
-    ["A","B","C"].forEach(z=>{
+    Object.keys(ZONES).forEach(z=>{
       const s=week.zones[z];
       h+=`<div class="st-row">
-        <span class="st-dot" style="background:${zoneColor[z]}"></span>
+        <span class="st-dot" style="background:${zonePalette(z).base}"></span>
         <span class="st-lbl" style="flex:0 0 110px">Zone ${z} · ${ZONES[z].name}</span>
-        <span class="st-bar"><i style="width:${Math.round(100*s.n/maxZ)}%;background:${zoneColor[z]}"></i></span>
+        <span class="st-bar"><i style="width:${Math.round(100*s.n/maxZ)}%;background:${zonePalette(z).base}"></i></span>
         <span class="st-n">${s.n||"—"}</span>
         <span class="st-t">${s.n?fmt(s.t):""}</span>
       </div>`;
@@ -1991,6 +2145,21 @@ function saveSettings(){
 }
 
 /* ---------------- Ajouter un ancien client (Base clients uniquement) ---------------- */
+let ocKind = "real";   // "real" | "abandoned"
+function setOcKind(k){
+  ocKind=k;
+  document.querySelectorAll('#ocKindMode .pm-opt').forEach(b=>b.classList.toggle('sel',b.dataset.kind===k));
+  document.getElementById('oc-order-details').style.display = k==="real" ? "" : "none";
+  document.getElementById('oc-total-row').style.display = k==="real" ? "" : "none";
+  document.getElementById('oldCliSave').textContent = k==="real" ? "Ajouter à la base clients" : "Ajouter aux clients abandonnés";
+  document.getElementById('oc-count-label').textContent = k==="real" ? "Nombre de commandes passées" : "Nombre de fois abandonnée";
+  document.getElementById('oc-count-hint').textContent = k==="real"
+    ? "Si elle a commandé plusieurs fois avant l'appli, augmente ce nombre — chaque commande compte pour sa fidélité."
+    : "Si elle a abandonné plusieurs fois avant l'appli, augmente ce nombre.";
+  document.getElementById('ocKindHint').textContent = k==="real"
+    ? "A reçu sa commande et payé — compte dans la Base clients et sa fidélité."
+    : "A donné ses coordonnées mais n'a jamais reçu de commande — archivée pour relance, ne compte dans aucune statistique de vente.";
+}
 let ocPhoneMode = "cd";   // "cd" | "intl"
 function setOcPhoneMode(m){
   ocPhoneMode=m;
@@ -2032,6 +2201,7 @@ function refreshOldClient(){
   hint.style.color = "var(--danger)";
 }
 function openOldClient(){
+  setOcKind("real");
   document.getElementById('oc-name').value="";
   document.getElementById('oc-phone').value="";
   document.getElementById('oc-indicatif').value="";
@@ -2059,11 +2229,23 @@ function saveOldClient(){
   if(!commune){ showToast("Choisis la commune du client"); return; }
   const zone=COMMUNE_ZONE[commune];
   const address=document.getElementById('oc-address').value.trim();
+  const count=Math.max(1,parseInt(document.getElementById('oc-count').value||"1",10));
+
+  if(ocKind==="abandoned"){
+    for(let i=0;i<count;i++){ archiveAbandoned({ phone:ph.value, name, zone, commune }); }
+    saveState();
+    updateClientsCount();
+    if(document.getElementById('abandonedList').style.display!=="none") renderAbandonedList();
+    closeOldClient();
+    const who=name||ph.value||"ce client";
+    showToast("✓ "+who+" ajouté"+(name?"e":"")+" aux clients abandonnés");
+    return;
+  }
+
   const qty=Math.max(1,parseInt(document.getElementById('oc-qty').value||"1",10));
   const type=document.getElementById('oc-type').value;
   const perOrderTotal=ocOrderTotal();
   if(type==="special" && perOrderTotal<=0){ showToast("Indique le montant spécial par commande"); return; }
-  const count=Math.max(1,parseInt(document.getElementById('oc-count').value||"1",10));
   const dateVal=document.getElementById('oc-date').value;
   const deliveredAt = dateVal ? new Date(dateVal+"T12:00:00").toISOString() : new Date().toISOString();
 
@@ -2089,6 +2271,7 @@ let curZonePage=null;
 function setTab(t){
   curZonePage=null;
   document.getElementById('page-zone').style.display='none';
+  document.getElementById('page-settings').style.display='none';
   document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('sel',b.dataset.tab===t));
   document.getElementById('page-liv').style.display = t==='liv'?'':'none';
   document.getElementById('page-cli').style.display = t==='cli'?'':'none';
@@ -2098,6 +2281,7 @@ function openZonePage(z){
   curZonePage=z;
   document.getElementById('page-liv').style.display='none';
   document.getElementById('page-cli').style.display='none';
+  document.getElementById('page-settings').style.display='none';
   document.getElementById('page-zone').style.display='';
   window.scrollTo(0,0);
   renderZonePage(z);
@@ -2106,7 +2290,6 @@ function renderZonePage(z){
   const orders=activeOrders(z);
   const pending=orders.filter(o=>!o.done).length;
   const delivered=orders.filter(o=>o.done).length;
-  const cls={A:"za",B:"zb",C:"zc"}[z];
   const page=document.getElementById('page-zone');
   page.innerHTML=`
     <button class="back-btn" id="zoneBack">‹ Retour à toutes les zones</button>
@@ -2115,7 +2298,7 @@ function renderZonePage(z){
       Coche ✓ chaque commande réellement livrée. Ensuite, « Reporter les non livrées »
       garde les non cochées (avec leur étiquette) pour la prochaine liste et retire les livrées.
     </div>
-    <section class="zone ${cls}">${zoneCardHTML(z)}</section>
+    <section class="zone">${zoneCardHTML(z)}</section>
     <div class="report-bar">
       <button class="report-btn" id="reportBtn" ${orders.length?'':'disabled'}>
         ↩ Reporter les ${pending} non livrée${pending>1?'s':''} vers la prochaine liste
@@ -2140,11 +2323,237 @@ function reportZone(z){
   }
 }
 function refreshOpenZone(){ if(curZonePage) renderZonePage(curZonePage); }
+
+/* ---------------- Paramètres : zones, livreurs, communes ---------------- */
+function refreshAllCommuneSelects(){
+  fillCommunes();
+  fillCliCommunes();
+  fillCommuneOptions(document.getElementById('e-commune'));
+  fillCommuneOptions(document.getElementById('oc-commune'));
+}
+function createZone(name, phone, colorKey){
+  const letter=nextZoneLetter();
+  if(!letter){ showToast("Nombre maximal de zones atteint"); return; }
+  ZONES[letter] = { label:"Zone "+letter, name:name, phone:phone, colorKey:colorKey||availableColorKeys()[0], communes:[] };
+  saveZonesToStorage();
+  rebuildCommuneZone();
+  render();
+  refreshAllCommuneSelects();
+  renderSettingsPage();
+  showToast("Zone "+letter+" créée — attribue-lui des communes ci-dessous");
+}
+function deleteZone(z){
+  if(!ZONES[z]) return;
+  if(ZONES[z].communes.length>0){
+    showToast("Réattribue d'abord ses "+ZONES[z].communes.length+" commune(s) dans la liste ci-dessous, puis réessaie");
+    return;
+  }
+  if(state.orders.some(o=>o.zone===z)){
+    showToast("Cette zone a encore des commandes (actives ou reportées) — transfère-les d'abord");
+    return;
+  }
+  if(!confirm("Supprimer "+ZONES[z].label+" · "+ZONES[z].name+" ? Cette action est définitive.")) return;
+  delete ZONES[z];
+  saveZonesToStorage();
+  rebuildCommuneZone();
+  render();
+  refreshAllCommuneSelects();
+  renderSettingsPage();
+  showToast("Zone "+z+" supprimée");
+}
+function addCommune(name, zone){
+  name=(name||"").trim();
+  if(!name){ showToast("Donne un nom à la commune"); return; }
+  if(!ZONES[zone]) return;
+  if(COMMUNE_ZONE[name]){ showToast("« "+name+" » existe déjà, dans "+ZONES[COMMUNE_ZONE[name]].label); return; }
+  ZONES[zone].communes.push(name);
+  saveZonesToStorage();
+  rebuildCommuneZone();
+  refreshAllCommuneSelects();
+  renderSettingsPage();
+  showToast(name+" ajoutée à "+ZONES[zone].label);
+}
+function deleteCommune(name){
+  const zone=COMMUNE_ZONE[name];
+  if(!zone) return;
+  if(!confirm("Retirer « "+name+" » de la liste ? Les commandes déjà enregistrées avec cette commune ne changent pas.")) return;
+  ZONES[zone].communes=ZONES[zone].communes.filter(c=>c!==name);
+  saveZonesToStorage();
+  rebuildCommuneZone();
+  refreshAllCommuneSelects();
+  renderSettingsPage();
+  showToast(name+" retirée");
+}
+function openSettingsPage(){
+  document.getElementById('page-liv').style.display='none';
+  document.getElementById('page-cli').style.display='none';
+  document.getElementById('page-zone').style.display='none';
+  document.getElementById('page-settings').style.display='';
+  window.scrollTo(0,0);
+  renderSettingsPage();
+}
+function renderSettingsPage(){
+  const page=document.getElementById('page-settings');
+
+  const zoneRows = Object.keys(ZONES).map(z=>{
+    const p=zonePalette(z);
+    const n=ZONES[z].communes.length;
+    return `
+    <div class="settings-zone-card">
+      <div class="sz-head" style="background:linear-gradient(120deg,${p.deep},${p.base})">Zone ${z}</div>
+      <div class="sz-body">
+        <div class="m-field">
+          <label>Nom de la zone</label>
+          <input type="text" data-zfield="name" data-zone="${z}" value="${esc(ZONES[z].name)}">
+        </div>
+        <div class="m-field" style="margin-bottom:2px">
+          <label>Numéro WhatsApp du livreur</label>
+          <input type="text" data-zfield="phone" data-zone="${z}" value="${esc(ZONES[z].phone)}" placeholder="+243 8XXXXXXXX">
+        </div>
+        <div class="sz-communes">${n} commune${n>1?'s':''} — réattribution ci-dessous, dans « Communes »</div>
+        <button class="foot-btn" data-delzone="${z}" style="margin-top:10px;width:100%;color:var(--danger)">Supprimer cette zone</button>
+      </div>
+    </div>`;
+  }).join("");
+
+  const allCommunes=[];
+  Object.keys(ZONES).forEach(z=>ZONES[z].communes.forEach(c=>allCommunes.push(c)));
+  allCommunes.sort((a,b)=>a.localeCompare(b,'fr'));
+  const communeRows = allCommunes.map(c=>{
+    const curZone=COMMUNE_ZONE[c];
+    const opts=Object.keys(ZONES).map(z=>
+      `<option value="${z}" ${z===curZone?'selected':''}>${esc(ZONES[z].label)} · ${esc(ZONES[z].name)}</option>`
+    ).join("");
+    return `<div class="commune-row"><span class="cr-name">${esc(c)}</span><select data-commune="${esc(c)}">${opts}</select><button type="button" class="cr-del" data-delcommune="${esc(c)}" title="Retirer cette commune">✕</button></div>`;
+  }).join("");
+
+  const availColors=availableColorKeys();
+  const swatchHTML=availColors.map((k,i)=>
+    `<button type="button" class="color-swatch${i===0?' sel':''}" data-color="${k}" style="background:${ZONE_PALETTE[k].base}" title="${ZONE_PALETTE[k].name}"></button>`
+  ).join("");
+
+  page.innerHTML=`
+    <button class="back-btn" id="settingsBack">‹ Retour</button>
+    <section class="card" style="padding:16px">
+      <h2 style="margin-bottom:4px">Zones et livreurs</h2>
+      <p class="m-hint" style="margin-bottom:12px">Enregistré automatiquement sur cet appareil.</p>
+      <div class="settings-zone-grid">${zoneRows}</div>
+      <div id="addZoneForm" style="display:none;margin-top:16px;padding-top:16px;border-top:1px solid var(--line)">
+        <div class="m-field"><label>Nom de la nouvelle zone</label><input type="text" id="nz-name" placeholder="ex. Périphérie"></div>
+        <div class="m-field"><label>Numéro WhatsApp du livreur</label><input type="text" id="nz-phone" placeholder="+243 8XXXXXXXX"></div>
+        <div class="m-field" style="margin-bottom:2px"><label>Couleur</label><div class="color-swatch-row">${swatchHTML}</div></div>
+        <div style="display:flex;gap:8px;margin-top:12px">
+          <button class="foot-btn" id="nzCancel" style="flex:1">Annuler</button>
+          <button class="wa-btn" id="nzCreate" style="flex:1;justify-content:center">Créer la zone</button>
+        </div>
+      </div>
+      <button class="foot-btn" id="addZoneBtn" style="margin-top:14px;width:100%">+ Ajouter une zone</button>
+    </section>
+    <section class="card" style="padding:16px;margin-top:14px">
+      <h2 style="margin-bottom:4px">Messages WhatsApp</h2>
+      <p class="m-hint" style="margin-bottom:12px">Utilisés par les boutons WhatsApp de la Base clients. Écris <code>{nom}</code> où tu veux insérer le nom du client automatiquement.</p>
+      <div class="m-field">
+        <label>Message — clients abandonnés</label>
+        <textarea data-msgfield="abandoned" rows="3">${esc(MESSAGES.abandoned)}</textarea>
+      </div>
+      <div class="m-field" style="margin-bottom:2px">
+        <label>Message — fidélité / promotion</label>
+        <textarea data-msgfield="loyalty" rows="3">${esc(MESSAGES.loyalty)}</textarea>
+      </div>
+    </section>
+
+    <section class="card" style="padding:16px;margin-top:14px">
+      <h2 style="margin-bottom:4px">Communes</h2>
+      <p class="m-hint" style="margin-bottom:12px">Changer la zone d'une commune ne touche que les prochaines commandes — jamais celles déjà enregistrées.</p>
+      <div class="commune-list">${communeRows}</div>
+      <div style="display:flex;gap:8px;margin-top:14px;flex-wrap:wrap">
+        <input type="text" id="newCommuneInput" placeholder="Nom de la nouvelle commune" style="flex:2;min-width:140px">
+        <select id="newCommuneZone" style="flex:1;min-width:120px">${Object.keys(ZONES).map(z=>`<option value="${z}">${esc(ZONES[z].label)} · ${esc(ZONES[z].name)}</option>`).join("")}</select>
+        <button class="foot-btn" id="addCommuneBtn" style="flex:0 0 auto">+ Ajouter</button>
+      </div>
+    </section>`;
+
+  document.getElementById('settingsBack').onclick=()=>setTab('liv');
+
+  page.querySelectorAll('[data-zfield]').forEach(inp=>{
+    inp.addEventListener('change',()=>{
+      const z=inp.dataset.zone, f=inp.dataset.zfield, val=inp.value.trim();
+      if(f==='name' && !val){ inp.value=ZONES[z].name; return; }
+      ZONES[z][f]=val;
+      saveZonesToStorage();
+      render();
+      showToast("Zone "+z+" mise à jour");
+    });
+  });
+
+  page.querySelectorAll('[data-commune]').forEach(sel=>{
+    sel.addEventListener('change',()=>{
+      const commune=sel.dataset.commune, newZone=sel.value, oldZone=COMMUNE_ZONE[commune];
+      if(!newZone || newZone===oldZone) return;
+      ZONES[oldZone].communes=ZONES[oldZone].communes.filter(c=>c!==commune);
+      ZONES[newZone].communes.push(commune);
+      saveZonesToStorage();
+      rebuildCommuneZone();
+      refreshAllCommuneSelects();
+      renderSettingsPage();
+      showToast(commune+" → "+ZONES[newZone].label);
+    });
+  });
+
+  page.querySelectorAll('[data-msgfield]').forEach(ta=>{
+    ta.addEventListener('change',()=>{
+      MESSAGES[ta.dataset.msgfield]=ta.value;
+      saveMessagesToStorage();
+      showToast("Message mis à jour");
+    });
+  });
+
+  page.querySelectorAll('[data-delzone]').forEach(btn=>{
+    btn.addEventListener('click',()=>deleteZone(btn.dataset.delzone));
+  });
+
+  page.querySelectorAll('[data-delcommune]').forEach(btn=>{
+    btn.addEventListener('click',()=>deleteCommune(btn.dataset.delcommune));
+  });
+
+  document.getElementById('addCommuneBtn').onclick=()=>{
+    const name=document.getElementById('newCommuneInput').value;
+    const zone=document.getElementById('newCommuneZone').value;
+    addCommune(name, zone);
+  };
+
+  document.getElementById('addZoneBtn').onclick=()=>{
+    if(!availColors.length){ showToast("Palette de couleurs épuisée"); return; }
+    document.getElementById('addZoneForm').style.display='';
+    document.getElementById('addZoneBtn').style.display='none';
+  };
+  document.getElementById('nzCancel').onclick=()=>{
+    document.getElementById('addZoneForm').style.display='none';
+    document.getElementById('addZoneBtn').style.display='';
+  };
+  let pickedColor=availColors[0];
+  page.querySelectorAll('.color-swatch').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      page.querySelectorAll('.color-swatch').forEach(b=>b.classList.remove('sel'));
+      btn.classList.add('sel');
+      pickedColor=btn.dataset.color;
+    });
+  });
+  document.getElementById('nzCreate').onclick=()=>{
+    const name=document.getElementById('nz-name').value.trim();
+    const phone=document.getElementById('nz-phone').value.trim();
+    if(!name){ showToast("Donne un nom à la zone"); return; }
+    createZone(name, phone, pickedColor);
+  };
+}
 function updateClientsCount(){
   document.getElementById('tabCliCount').textContent = Object.keys(state.clients).length;
+  const ac=document.getElementById('abandonedCount'); if(ac) ac.textContent=Object.keys(state.abandoned||{}).length;
 }
 function fillCliCommunes(){
   const sel=document.getElementById('cliCommune');
+  const placeholder = sel.querySelector('option[value=""]');
+  sel.innerHTML = placeholder ? placeholder.outerHTML : "";
   Object.keys(ZONES).forEach(z=>{
     ZONES[z].communes.slice().sort((a,b)=>a.localeCompare(b,'fr')).forEach(c=>{
       const o=document.createElement('option'); o.value=c; o.textContent=c; sel.appendChild(o);
@@ -2203,10 +2612,39 @@ function renderClients(){
       </div>
       <div class="cl-side">
         <div class="cl-total">${fmt(c.total)}</div>
-        ${wc?`<a class="cl-wa" href="https://wa.me/${wc}" target="_blank" rel="noopener"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 00-8.5 15.3L2 22l4.8-1.5A10 10 0 1012 2zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.5-3.9-4.7-4.1-.1-.2-1-1.4-1-2.6 0-1.2.6-1.8.9-2.1.2-.2.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.3 0 .5l-.4.6c-.2.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.4 2.4 1.5.2.1.4.1.5-.1l.7-.9c.2-.2.3-.2.6-.1l1.9.9c.3.1.5.2.5.3.1.2.1.6 0 1z"/></svg>WhatsApp</a>`:''}
+        ${wc?`<a class="cl-wa" href="${waLink(wc, MESSAGES.loyalty, c.name)}" target="_blank" rel="noopener"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 00-8.5 15.3L2 22l4.8-1.5A10 10 0 1012 2zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.5-3.9-4.7-4.1-.1-.2-1-1.4-1-2.6 0-1.2.6-1.8.9-2.1.2-.2.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.3 0 .5l-.4.6c-.2.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.4 2.4 1.5.2.1.4.1.5-.1l.7-.9c.2-.2.3-.2.6-.1l1.9.9c.3.1.5.2.5.3.1.2.1.6 0 1z"/></svg>WhatsApp</a>`:''}
       </div>
     </div>`;
   }).join("");
+}
+function renderAbandonedList(){
+  const all=Object.values(state.abandoned||{});
+  document.getElementById('abandonedCount').textContent=all.length;
+  const box=document.getElementById('abandonedList');
+  if(all.length===0){ box.innerHTML=`<div class="cl-empty">Aucun client abandonné pour l'instant.</div>`; return; }
+  all.sort((a,b)=>(b.lastDate||"").localeCompare(a.lastDate||""));
+  box.innerHTML=all.map(a=>{
+    const communes=Object.keys(a.communes||{}).join(", ");
+    const wc=sanitizeClient(a.phone);
+    const last=a.lastDate?new Date(a.lastDate).toLocaleDateString('fr-FR'):"—";
+    return `<div class="cli-card">
+      <div class="cl-main">
+        <div class="cl-name">${esc(a.name||'(sans nom)')} <span class="cl-badge">${a.count||1}×</span></div>
+        <div class="cl-meta">${wc?('📞 wa.me/'+wc):'<i>sans numéro</i>'}${communes?' <span class="sep">·</span> 📍 '+esc(communes):''} <span class="sep">·</span> dernier abandon : ${last}</div>
+      </div>
+      <div class="cl-side">
+        ${wc?`<a class="cl-wa" href="${waLink(wc, MESSAGES.abandoned, a.name)}" target="_blank" rel="noopener"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 00-8.5 15.3L2 22l4.8-1.5A10 10 0 1012 2zm5.3 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .2-3.3-.7-2.8-1.1-4.5-3.9-4.7-4.1-.1-.2-1-1.4-1-2.6 0-1.2.6-1.8.9-2.1.2-.2.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 2c.1.2.1.3 0 .5l-.4.6c-.2.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.4 2.4 1.5.2.1.4.1.5-.1l.7-.9c.2-.2.3-.2.6-.1l1.9.9c.3.1.5.2.5.3.1.2.1.6 0 1z"/></svg>WhatsApp</a>`:''}
+        <button class="foot-btn" data-abandel="${esc(a.key)}" style="margin-top:6px">Retirer</button>
+      </div>
+    </div>`;
+  }).join("");
+  box.querySelectorAll('[data-abandel]').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      delete state.abandoned[btn.dataset.abandel];
+      saveState();
+      renderAbandonedList();
+    });
+  });
 }
 function toggleRevenue(){
   if(revenueVisible){ revenueVisible=false; renderClients(); return; }
@@ -2228,6 +2666,19 @@ function exportClientsCSV(){
   const csv="\uFEFF"+rows.map(r=>r.map(csvCell).join(";")).join("\r\n");
   downloadFile("bk-clients-"+dateStamp()+".csv",csv,"text/csv;charset=utf-8");
   showToast("Base clients exportée");
+}
+function exportAbandonedCSV(){
+  const all=Object.values(state.abandoned||{});
+  if(all.length===0){ showToast("Aucun client abandonné à exporter"); return; }
+  const head=["Nom","Telephone","Communes","NombreAbandons","DernierAbandon"];
+  const rows=[head];
+  all.sort((a,b)=>(b.lastDate||"").localeCompare(a.lastDate||"")).forEach(a=>{
+    rows.push([a.name, sanitizeClient(a.phone)?("+"+sanitizeClient(a.phone)):"", Object.keys(a.communes||{}).join(" / "),
+      a.count||1, a.lastDate?new Date(a.lastDate).toLocaleDateString('fr-FR'):""]);
+  });
+  const csv="\uFEFF"+rows.map(r=>r.map(csvCell).join(";")).join("\r\n");
+  downloadFile("bk-clients-abandonnes-"+dateStamp()+".csv",csv,"text/csv;charset=utf-8");
+  showToast("Clients abandonnés exportés · "+all.length);
 }
 function metaCsvCell(v){ v=(v==null?"":String(v)); return /[",\n]/.test(v) ? '"'+v.replace(/"/g,'""')+'"' : v; }
 function exportMetaCSV(){
@@ -2304,7 +2755,7 @@ function init(){
 
   document.getElementById('printAllBtn').addEventListener('click',()=>{
     if(state.orders.length===0){ showToast("Aucune livraison à imprimer"); return; }
-    printZones(["A","B","C"]);
+    printZones(Object.keys(ZONES));
   });
   document.getElementById('newDayBtn').addEventListener('click',()=>{
     const delivered=state.orders.filter(o=>o.done).length;
@@ -2370,6 +2821,9 @@ function init(){
   document.getElementById('oldCliClose').addEventListener('click',closeOldClient);
   document.getElementById('oldCliOv').addEventListener('click',e=>{ if(e.target.id==='oldCliOv') closeOldClient(); });
   document.getElementById('oldCliSave').addEventListener('click',saveOldClient);
+  document.getElementById('ocKindMode').addEventListener('click',e=>{
+    const b=e.target.closest('.pm-opt'); if(b)setOcKind(b.dataset.kind);
+  });
   document.getElementById('ocPhoneMode').addEventListener('click',e=>{
     const b=e.target.closest('.pm-opt'); if(b)setOcPhoneMode(b.dataset.pm);
   });
@@ -2392,6 +2846,14 @@ function init(){
   document.querySelector('.ribbon').addEventListener('click',e=>{
     const b=e.target.closest('.pill'); if(b)openZonePage(b.dataset.zone);
   });
+  document.getElementById('zonesSettingsBtn').addEventListener('click',openSettingsPage);
+  document.getElementById('abandonedToggleBtn').addEventListener('click',()=>{
+    const box=document.getElementById('abandonedList');
+    const open = box.style.display==='none';
+    box.style.display = open ? '' : 'none';
+    if(open) renderAbandonedList();
+  });
+  document.getElementById('abandonedCsvBtn').addEventListener('click',exportAbandonedCSV);
   ['cliSearch','cliCommune','cliType','cliSort'].forEach(id=>
     document.getElementById(id).addEventListener('input',renderClients));
   document.getElementById('cliExportBtn').addEventListener('click',exportClientsCSV);
